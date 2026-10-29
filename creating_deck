@@ -1,7 +1,21 @@
+plus_two = 2
+plus_four = 4
+plus_six = 6
+plus_eight = 8
+plus_ten = 10
+def double_points(score):
+    for i in range of (0, len(score)):
+        if score[i] != 0-12:
+            
+        else:
+            score = score * 2
+    
+
+
 import random
 def CreateDeck():
     Deck =  [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4  + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [10] * 10 + [11] * 11 + [12] * 12
     Deck += ['Flip three'] * 3 + ['Second Chance'] * 3 + ['Freeze'] * 3
-    Deck += ["+2"] + ["+4"] + ["+6"] + ["+8"] + ["+10"] + ["x2"]
+    Deck += [plus_two] + [plus_four] + [plus_six] + [plus_eight] + [plus_ten] + [double_points]
     random.shuffle(Deck)
     return(Deck)
