@@ -11,7 +11,10 @@ def turn():
         add_card(hand)
         print("This is your hand:")
         print(hand)
+        for i in range(0,len(hand)):
+            if hand[-1]
     else:
         print("You're a wimp.")
         print("This is your loser hand:")
         print(hand)
+turn()
