@@ -1,0 +1,17 @@
+hand = []
+def add_card(hand):
+    hand += [Deck[0]]
+    del Deck[0]
+    return(hand)
+
+def turn():
+    print("Would you like to pick up a card? YES or NO?")
+    response = input()
+    if response == "YES":
+        add_card(hand)
+        print("This is your hand:")
+        print(hand)
+    else:
+        print("You're a wimp.")
+        print("This is your loser hand:")
+        print(hand)
