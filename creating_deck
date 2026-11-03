@@ -13,4 +13,4 @@ def CreateDeck():
     Deck += ["plus_two"] + ["plus_four"] + ["plus_six"] + ["plus_eight"] + ["plus_ten"] + ["double_points"]
     random.shuffle(Deck)
     return (Deck)
-print(CreateDeck())
+Deck = CreateDeck()
