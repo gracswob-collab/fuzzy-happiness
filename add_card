@@ -1,0 +1,4 @@
+def add_card(hand):
+    hand += [Deck[0]]
+    del Deck[0]
+    return(hand)
