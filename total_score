@@ -1,0 +1,10 @@
+def total_score(a):
+    special_cards = []
+    for i in range(0,len(a)):
+        if str.isdigit(i) == True:
+            score[0] += i
+        else:
+            special_cards += [i]
+    if len(special_cards) >= 1:
+
+    else:
