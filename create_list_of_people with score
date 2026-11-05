@@ -12,3 +12,7 @@ for i in range(0, int(number_of_players)):
 score = []
 for i in range(0, int(number_of_players)):
    score = score + [0]
+
+hands = []
+for i in range(0, int(number_of_players)):
+   hands = hands + []
