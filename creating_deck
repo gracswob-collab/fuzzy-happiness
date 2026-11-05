@@ -1,10 +1,3 @@
-plus_two = 2
-plus_four = 4
-plus_six = 6
-plus_eight = 8
-plus_ten = 10
-double_points = 0 #later make it so its not the whole score
-
 import random
 def CreateDeck():
     Deck = [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [
