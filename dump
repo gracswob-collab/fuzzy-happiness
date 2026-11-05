@@ -1,0 +1,90 @@
+import random
+def CreateDeck():
+    Deck = [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [
+        10] * 10 + [11] * 11 + [12] * 12
+    Deck += ['Flip three'] * 3 + ['Second Chance'] * 3 + ['Freeze'] * 3
+    Deck += ["plus_two"] + ["plus_four"] + ["plus_six"] + ["plus_eight"] + ["plus_ten"] + ["double_points"]
+    random.shuffle(Deck)
+    return (Deck)
+Deck = CreateDeck()
+
+print("How many people are playing?(2-18):")
+number_of_players = int(input())
+while number_of_players < 2 or number_of_players > 18:
+   print("How many people are playing?(2-18):")
+   number_of_players = int(input())
+
+players = []
+for i in range(0, int(number_of_players)):
+   print("Enter player", (i+1), "'s name:")
+   name = input()
+   players = players + [name]
+
+score = []
+for i in range(0, int(number_of_players)):
+   score = score + [0]
+
+hands = []
+for i in range(0, int(number_of_players)):
+   hands.append([])
+
+def add_card(player):
+    hands[int(player)].append(Deck[0])
+    del Deck[0]
+
+end_turn = 0
+
+def turn():
+    global end_turn # makes it so you can use the variable in the function
+    print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
+    print("This is your current hand:", hands[i])
+    print("********************************************")
+    print("")
+    response = input()
+    if response == "YES":
+        add_card(i)
+        print("This is your new hand:")
+        print(hands[i])
+        print("********************************************")
+        print("")
+    elif response == "NO":
+        print("You're a wimp.")
+        print("This is your loser hand:")
+        print(hands[i])
+        print("********************************************")
+        print("")
+        hands[i] = hands[i] + ["DONE"]
+        end_turn = end_turn + 1
+    else:
+        while response != "YES" and response != "NO":
+            print("Sorry, I didn't understand.")
+            print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
+            print("This is your current hand:", hands[i])
+            print("********************************************")
+            print("")
+            response = input()
+            if response == "YES":
+                add_card(i)
+                print("This is your new hand:")
+                print(hands[i])
+                print("********************************************")
+                print("")
+                break
+            if response == "NO":
+                print("You're a wimp.")
+                print("This is your loser hand:")
+                print(hands[i])
+                print("********************************************")
+                print("")
+                hands[i] = hands[i] + ["DONE"]
+                end_turn = end_turn + 1
+                break
+
+while end_turn != number_of_players:
+    for i in range(0, int(number_of_players)):
+        if hands[i] and hands[i][-1] == 'DONE':
+            print(players[i], "you're a wimp.")
+            print("********************************************")
+            print("")
+        else:
+            turn()
