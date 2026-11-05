@@ -1,9 +1,3 @@
-hand = []
-def add_card(hand):
-    hand += [Deck[0]]
-    del Deck[0]
-    return(hand)
-
 def turn():
     print("Would you like to pick up a card? YES or NO?")
     response = input()
