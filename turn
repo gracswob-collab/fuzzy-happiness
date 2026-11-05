@@ -6,6 +6,11 @@ def add_card(player):
         special_hands[int(player)].append(Deck[0])
         del Deck[0]
 
+def count_score():
+    for i in range(0, int(number_of_players)):
+        score[i] = score[i] + sum(hands[i])
+        hands[i] = []
+        print(players[i], "has", score[i], "points.")
 
 end_turn = 0
 
@@ -50,9 +55,17 @@ def turn():
                 break
 
 while end_turn != number_of_players:
-    for i in range(0, int(number_of_players)):
-        if hands[i] and hands[i][-1] == 'DONE':
-            print(players[i], "you're a wimp.")
-            print("")
-        else:
-            turn()
+    if end_turn != number_of_players:
+        for i in range(0, int(number_of_players)):
+            if hands[i] and hands[i][-1] == 'DONE':
+                print(players[i], "you're a wimp.")
+                print("")
+            else:
+                turn()
+            if len(hands[i]) >= 7:
+                print("You got 7 cards. The round is over and you will be rewarded 15 bonus points to your total score.")
+                score[i] = score[i] + 15
+                count_score()
+                end_turn = number_of_players
+    else:
+        break
