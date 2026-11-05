@@ -1,29 +1,46 @@
+def add_card(player):
+    hands[int(player)].append(Deck[0])
+    del Deck[0]
+
+end_turn = 0
+
 def turn():
+    global end_turn # makes it so you can use the variable in the function
     print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
+    print("This is your current hand:", hands[i])
     response = input()
     if response == "YES":
         add_card(i)
-        print("This is your hand:")
+        print("This is your new hand:")
         print(hands[i])
     elif response == "NO":
         print("You're a wimp.")
         print("This is your loser hand:")
         print(hands[i])
+        hands[i] = hands[i] + ["DONE"]
+        end_turn = end_turn + 1
     else:
-        while response != "YES" or response != "NO":
+        while response != "YES" and response != "NO":
             print("Sorry, I didn't understand.")
             print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
+            print("This is your current hand:", hands[i])
             response = input()
             if response == "YES":
                 add_card(i)
-                print("This is your hand:")
+                print("This is your new hand:")
                 print(hands[i])
                 break
             if response == "NO":
                 print("You're a wimp.")
                 print("This is your loser hand:")
                 print(hands[i])
+                hands[i] = hands[i] + ["DONE"]
+                end_turn = end_turn + 1
                 break
 
-for i in range(0, int(number_of_players)):
-    turn()
+while end_turn != number_of_players:
+    for i in range(0, int(number_of_players)):
+        if hands[i] and hands[i][-1] == 'DONE':
+            print(players[i], "you're a wimp.")
+        else:
+            turn()
