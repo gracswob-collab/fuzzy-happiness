@@ -10,10 +10,14 @@ for i in range(0, int(number_of_players)):
    name = input()
    players = players + [name]
 
-scores = []
+score = []
 for i in range(0, int(number_of_players)):
-   scores = scores + [0]
+   score = score + [0]
 
 hands = []
 for i in range(0, int(number_of_players)):
    hands.append([])
+
+special_hands = []
+for i in range(0, int(number_of_players)):
+   special_hands.append([])
