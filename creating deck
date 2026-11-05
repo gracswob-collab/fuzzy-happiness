@@ -7,3 +7,4 @@ def CreateDeck():
     random.shuffle(Deck)
     return (Deck)
 Deck = CreateDeck()
+ 
