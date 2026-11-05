@@ -28,30 +28,42 @@ hands = []
 for i in range(0, int(number_of_players)):
    hands.append([])
 
+special_hands = []
+for i in range(0, int(number_of_players)):
+   special_hands.append([])
+
+
 def add_card(player):
-    hands[int(player)].append(Deck[0])
-    del Deck[0]
+    if isinstance(Deck[0],(int)) == True:
+        hands[int(player)].append(Deck[0])
+        del Deck[0]
+    else:
+        special_hands[int(player)].append(Deck[0])
+        del Deck[0]
+
+def count_score():
+    for i in range(0, int(number_of_players)):
+        score[i] = score[i] + sum(hands[i])
+        hands[i] = []
+        print(players[i], "has", score[i], "points.")
 
 end_turn = 0
 
 def turn():
     global end_turn # makes it so you can use the variable in the function
     print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
-    print("This is your current hand:", hands[i])
-    print("********************************************")
+    print("This is your current hand:", hands[i]+special_hands[i])
     print("")
     response = input()
     if response == "YES":
         add_card(i)
         print("This is your new hand:")
-        print(hands[i])
-        print("********************************************")
+        print(hands[i] + special_hands[i])
         print("")
     elif response == "NO":
         print("You're a wimp.")
         print("This is your loser hand:")
-        print(hands[i])
-        print("********************************************")
+        print(hands[i]+special_hands[i])
         print("")
         hands[i] = hands[i] + ["DONE"]
         end_turn = end_turn + 1
@@ -59,32 +71,36 @@ def turn():
         while response != "YES" and response != "NO":
             print("Sorry, I didn't understand.")
             print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
-            print("This is your current hand:", hands[i])
-            print("********************************************")
+            print("This is your current hand:", hands[i]+special_hands[i])
             print("")
             response = input()
             if response == "YES":
                 add_card(i)
                 print("This is your new hand:")
-                print(hands[i])
-                print("********************************************")
+                print(hands[i]+special_hands[i])
                 print("")
                 break
             if response == "NO":
                 print("You're a wimp.")
                 print("This is your loser hand:")
                 print(hands[i])
-                print("********************************************")
                 print("")
                 hands[i] = hands[i] + ["DONE"]
                 end_turn = end_turn + 1
                 break
 
 while end_turn != number_of_players:
-    for i in range(0, int(number_of_players)):
-        if hands[i] and hands[i][-1] == 'DONE':
-            print(players[i], "you're a wimp.")
-            print("********************************************")
-            print("")
-        else:
-            turn()
+    if end_turn != number_of_players:
+        for i in range(0, int(number_of_players)):
+            if hands[i] and hands[i][-1] == 'DONE':
+                print(players[i], "you're a wimp.")
+                print("")
+            else:
+                turn()
+            if len(hands[i]) >= 7:
+                print("You got 7 cards. The round is over and you will be rewarded 15 bonus points to your total score.")
+                score[i] = score[i] + 15
+                count_score()
+                end_turn = number_of_players
+    else:
+        break 
