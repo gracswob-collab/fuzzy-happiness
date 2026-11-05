@@ -3,23 +3,17 @@ number_of_players = int(input())
 while number_of_players < 2 or number_of_players > 18:
    print("How many people are playing?(2-18):")
    number_of_players = int(input())
+
 players = []
 for i in range(0, int(number_of_players)):
    print("Enter player", (i+1), "'s name:")
    name = input()
    players = players + [name]
 
-score = []
+scores = []
 for i in range(0, int(number_of_players)):
-   score = score + [0]
+   scores = scores + [0]
 
 hands = []
 for i in range(0, int(number_of_players)):
    hands.append([])
-
-def add_card(player):
-    hands[int(player)].append(Deck[0])
-    del Deck[0]
-
-for i in range(0, int(number_of_players)):
-    add_card(i)
