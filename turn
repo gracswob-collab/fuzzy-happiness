@@ -1,14 +1,14 @@
 def turn():
-    print("Would you like to pick up a card? YES or NO?")
+    print("Would you,", players[i], "like to pick up a card? YES or NO?")
     response = input()
     if response == "YES":
-        add_card(hand)
+        add_card(i)
         print("This is your hand:")
-        print(hand)
-        for i in range(0,len(hand)):
-            if hand[-1]
+        print(hands[i])
     else:
         print("You're a wimp.")
         print("This is your loser hand:")
-        print(hand)
-turn()
+        print(hands[i])
+
+for i in range(0, int(number_of_players)):
+    turn()
