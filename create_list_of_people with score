@@ -15,4 +15,4 @@ for i in range(0, int(number_of_players)):
 
 hands = []
 for i in range(0, int(number_of_players)):
-   hands = hands + []
+   hands.append([])
