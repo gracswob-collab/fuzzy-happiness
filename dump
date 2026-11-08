@@ -24,6 +24,10 @@ score = []
 for i in range(0, int(number_of_players)):
    score = score + [0]
 
+total_score = []
+for i in range(0, int(number_of_players)):
+   total_score = total_score + [0]
+
 hands = []
 for i in range(0, int(number_of_players)):
    hands.append([])
@@ -62,6 +66,7 @@ def plus_cards(player):
             continue
 
 def count_score():
+    print("")
     for i in range(0, int(number_of_players)):
         if "DONE" in hands[i]:
             hands[i].remove("DONE")
@@ -69,7 +74,11 @@ def count_score():
         hands[i] = []
         duble_points(i)
         plus_cards(i)
-        print(players[i], "has", score[i], "points.")
+        print(players[i], "got", score[i], "points this round.")
+        total_score[i] = total_score[i] + score[i]
+    print("")
+    for i in range(0, int(number_of_players)):
+        print(players[i], "has", total_score[i], "points in total.")
 
 end_turn = 0
 
@@ -115,21 +124,30 @@ def turn():
 
 frice = "" #frozen sacrifice
 frices = [] # list of sacrifices
-def freeze(player):
+def freeze(player): #it freezes the wroong person when you do it twice
     global frice
     global frices
+    global end_turn
     frices = []
-    if special_hands[player][-1] == "'Freeze'":
+    if special_hands[player] and special_hands[player][-1] == "Freeze":
         print(players[player], "who would you like to freeze?")
         for i in range(0, int(number_of_players)):
             if hands[i] and hands[i][-1] == 'DONE':
                 continue
             else:
                 frices.append(players[i])
-                print(str(len(frices))+frices[i])
-        print("enter a number from the list above.")
-        frice = input()
-
+        for i in range(0, len(frices)):
+            print((i+1), ".", frices[i])
+        print("enter a NUMBER from the list above.")
+        frice = int(input())
+        while int(frice) > len(frices):
+            print("Sorry, I didn't understand.")
+            print("enter a NUMBER from the list above.")
+            frice = input()
+        hands[frice-1] = hands[frice-1] + ["DONE"]
+        end_turn = end_turn + 1
+        print(players[frice-1], "you are frozen. haha.")
+        del special_hands[player].remove("Freeze")
     else:
         return
 
@@ -140,9 +158,11 @@ while end_turn != number_of_players:
             print("")
             continue
         turn()
+        freeze(i)
         if len(hands[i]) >= 7:
             print(players[i], "got 7 cards. The round is over and you will be rewarded 15 bonus points to your total score.")
-            score[i] = score[i] + 15
+            total_score[i] = total_score[i] + 15
             end_turn = number_of_players
             break
 count_score()
+
