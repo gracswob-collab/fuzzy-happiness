@@ -140,6 +140,10 @@ def freeze(player): #it freezes the wroong person when you do it twice
             print((i+1), ".", frices[i])
         print("enter a NUMBER from the list above.")
         frice = int(input())
+        while frice is str:
+            print("Sorry, I didn't understand.")
+            print("enter a NUMBER from the list above.")
+            frice = input()
         while int(frice) > len(frices):
             print("Sorry, I didn't understand.")
             print("enter a NUMBER from the list above.")
@@ -147,7 +151,7 @@ def freeze(player): #it freezes the wroong person when you do it twice
         hands[frice-1] = hands[frice-1] + ["DONE"]
         end_turn = end_turn + 1
         print(players[frice-1], "you are frozen. haha.")
-        del special_hands[player].remove("Freeze")
+        special_hands[player].remove("Freeze")
     else:
         return
 
@@ -159,10 +163,9 @@ while end_turn != number_of_players:
             continue
         turn()
         freeze(i)
-        if len(hands[i]) >= 7:
+        if len(hands[i]) >= 7 and hands[i][-1] != 'DONE':
             print(players[i], "got 7 cards. The round is over and you will be rewarded 15 bonus points to your total score.")
             total_score[i] = total_score[i] + 15
             end_turn = number_of_players
             break
 count_score()
-
