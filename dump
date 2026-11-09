@@ -38,9 +38,12 @@ for i in range(0, int(number_of_players)):
 
 
 def add_card(player):
+    global end_turn
     if isinstance(Deck[0],(int)) == True:
         hands[int(player)].append(Deck[0])
         del Deck[0]
+        if len(hands[int(player)]) >= 7:
+            end_turn = number_of_players
     else:
         special_hands[int(player)].append(Deck[0])
         del Deck[0]
@@ -178,24 +181,37 @@ def flip3(player):
             print("Sorry, I didn't understand.")
             print("enter a NUMBER from the list above.")
             frice = input()
-        add_card(players[frice - 1])
-        add_card(players[frice - 1])
-        add_card(players[frice - 1])
+        while players[frice] != frices[frice]:
+            frice = frice - 1
+        add_card(int(frice) - 1)
+        add_card(int(frice) - 1)
+        add_card(int(frice) - 1)
         print(players[frice - 1], "this is your new hand:", hands[frice-1] + special_hands[frice - 1])
+        special_hands[player].remove("Flip three")
 
-while end_turn != number_of_players:
+def round(): #WHY DOES IT ONLY PLAY ONE PERSON
+    global end_turn
+    while end_turn != number_of_players:
+        for i in range(0, int(number_of_players)):
+            if hands[i] and hands[i][-1] == 'DONE':
+                print(players[i], "you're a wimp.")
+                print("")
+                continue
+            turn()
+            freeze(i)
+            flip3(i)
+            if len(hands[i]) >= 7 and hands[i][-1] != 'DONE':
+                print(players[i], "got 7 cards. The round is over and you will be rewarded 15 bonus points to your total score.")
+                total_score[i] = total_score[i] + 15
+                end_turn = number_of_players
+                break
+    return(count_score())
+
+while total_score[1] < 200:
+    print("")
+    round()
+    end_turn = 0
     for i in range(0, int(number_of_players)):
-        if hands[i] and hands[i][-1] == 'DONE':
-            print(players[i], "you're a wimp.")
-            print("")
-            continue
-        turn()
-        freeze(i)
-        flip3(i)
-        if len(hands[i]) >= 7 and hands[i][-1] != 'DONE':
-            print(players[i], "got 7 cards. The round is over and you will be rewarded 15 bonus points to your total score.")
-            total_score[i] = total_score[i] + 15
-            end_turn = number_of_players
-            break
-count_score()
-
+        special_hands[i] = []
+        hands[i] = []
+        score[i] = [0]
