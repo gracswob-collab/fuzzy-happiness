@@ -122,7 +122,7 @@ def turn():
                 end_turn = end_turn + 1
                 break
 
-frice = "" #frozen sacrifice
+frice = "" #frozen/flip sacrifice
 frices = [] # list of sacrifices
 def freeze(player): #it freezes the wroong person when you do it twice
     global frice
@@ -155,6 +155,34 @@ def freeze(player): #it freezes the wroong person when you do it twice
     else:
         return
 
+def flip3(player):
+    global frices
+    global frice
+    global end_turn
+    if special_hands[player] and special_hands[player][-1] == "Flip three":
+        print(players[player], "who would you like to flip?")
+        for i in range(0, int(number_of_players)):
+            if hands[i] and hands[i][-1] == 'DONE':
+                continue
+            else:
+                frices.append(players[i])
+        for i in range(0, len(frices)):
+            print((i+1), ".", frices[i])
+        print("enter a NUMBER from the list above.")
+        frice = int(input())
+        while frice is str:
+            print("Sorry, I didn't understand.")
+            print("enter a NUMBER from the list above.")
+            frice = input()
+        while int(frice) > len(frices):
+            print("Sorry, I didn't understand.")
+            print("enter a NUMBER from the list above.")
+            frice = input()
+        add_card(players[frice - 1])
+        add_card(players[frice - 1])
+        add_card(players[frice - 1])
+        print(players[frice - 1], "this is your new hand:", hands[frice-1] + special_hands[frice - 1])
+
 while end_turn != number_of_players:
     for i in range(0, int(number_of_players)):
         if hands[i] and hands[i][-1] == 'DONE':
@@ -163,9 +191,11 @@ while end_turn != number_of_players:
             continue
         turn()
         freeze(i)
+        flip3(i)
         if len(hands[i]) >= 7 and hands[i][-1] != 'DONE':
             print(players[i], "got 7 cards. The round is over and you will be rewarded 15 bonus points to your total score.")
             total_score[i] = total_score[i] + 15
             end_turn = number_of_players
             break
 count_score()
+
