@@ -8,34 +8,51 @@ def CreateDeck():
     return (Deck)
 Deck = CreateDeck()
 
-print("How many people are playing?(2-18):")
-number_of_players = int(input())
-while number_of_players < 2 or number_of_players > 18:
-   print("How many people are playing?(2-18):")
-   number_of_players = int(input())
-
-players = []
-for i in range(0, int(number_of_players)):
-   print("Enter player", (i+1), "'s name:")
-   name = input()
-   players = players + [name]
-
+number_of_players = 0
 score = []
-for i in range(0, int(number_of_players)):
-   score = score + [0]
-
 total_score = []
-for i in range(0, int(number_of_players)):
-   total_score = total_score + [0]
-
 hands = []
-for i in range(0, int(number_of_players)):
-   hands.append([])
-
+players = []
 special_hands = []
-for i in range(0, int(number_of_players)):
-   special_hands.append([])
 
+def new_game():
+    global number_of_players
+    global Deck
+    global score
+    global hands
+    global special_hands
+    global total_score
+    global players
+    print("How many people are playing?(2-18):")
+    number_of_players = input()
+
+    while number_of_players.isdecimal() == False or int(number_of_players) < 2 or int(number_of_players) > 18:
+       print("How many people are playing? Please enter a NUMBER between 2 and 18 you idiot:")
+       number_of_players = input()
+
+    number_of_players = int(number_of_players)
+    players = []
+    for i in range(0, int(number_of_players)):
+       print("Enter player", (i+1), "'s name:")
+       name = input()
+       players = players + [name]
+
+    score = []
+    for i in range(0, int(number_of_players)):
+       score = score + [0]
+
+    total_score = []
+    for i in range(0, int(number_of_players)):
+       total_score = total_score + [0]
+
+    hands = []
+    for i in range(0, int(number_of_players)):
+       hands.append([])
+
+    special_hands = []
+    for i in range(0, int(number_of_players)):
+       special_hands.append([])
+new_game()
 
 def add_card(player):
     global end_turn
@@ -44,8 +61,17 @@ def add_card(player):
     if isinstance(Deck[0],(int)) == True:
         hands[int(player)].append(Deck[0])
         del Deck[0]
+        if hands[player].count(hands[player][0]) and hands[player].count(hands[player][-1]) >= 2:
+            print(players[player], "BUSTED!! You idiot. You got two", hands[player][-1], "'S, and a total hand of:", hands[player], ". Your hand is going to be deleted.")
+            hands[player] = ['DONE']
+            end_turn = end_turn + 1
+            special_hands[player] = []
+
         if len(hands[int(player)]) >= 7:
-            end_turn = number_of_players
+            if hands[int(player)][-1] == 'DONE':
+                print("")
+            else:
+                end_turn = number_of_players
     else:
         special_hands[int(player)].append(Deck[0])
         del Deck[0]
@@ -151,12 +177,7 @@ def freeze(player):
         print("Enter a NUMBER from the list above.")
         frice = input()
 
-        while frice.isdecimal() == False:
-            print("Sorry, I didn't understand.")
-            print("enter a NUMBER from the list above.")
-            frice = input()
-
-        while int(frice) > len(frices) or int(frice) < 1:
+        while frice.isdecimal() == False or int(frice) > len(frices) or int(frice) < 1:
             print("Sorry, I didn't understand.")
             print("enter a NUMBER from the list above.")
             frice = input()
@@ -189,12 +210,7 @@ def flip3(player):
         print("Enter a NUMBER from the list above.")
         frice = input()
 
-        while frice.isdecimal() == False:
-            print("Sorry, I didn't understand.")
-            print("enter a NUMBER from the list above.")
-            frice = input()
-
-        while int(frice) > len(frices) or int(frice) < 1:
+        while frice.isdecimal() == False or int(frice) > len(frices) or int(frice) < 1:
             print("Sorry, I didn't understand.")
             print("enter a NUMBER from the list above.")
             frice = input()
@@ -205,6 +221,7 @@ def flip3(player):
 
         for i in range(0,3):
             add_card(target)
+            if #make it ebd when tehre is adone antoa dthe end 
             if end_turn == number_of_players:
                 break
 
@@ -214,7 +231,7 @@ def flip3(player):
             freeze(target)
 
         while end_turn != int(number_of_players) and "Flip three" in special_hands[target]:
-            freeze(target)
+            flip3(target)
 
 
 def round():
