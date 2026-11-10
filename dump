@@ -39,6 +39,8 @@ for i in range(0, int(number_of_players)):
 
 def add_card(player):
     global end_turn
+    if len(Deck) == 0:
+        CreateDeck()
     if isinstance(Deck[0],(int)) == True:
         hands[int(player)].append(Deck[0])
         del Deck[0]
@@ -71,12 +73,14 @@ def plus_cards(player):
 def count_score():
     print("")
     for i in range(0, int(number_of_players)):
-        if "DONE" in hands[i]:
+        while "DONE" in hands[i]:
             hands[i].remove("DONE")
         score[i] = score[i] + sum(hands[i])
-        hands[i] = []
         duble_points(i)
         plus_cards(i)
+        if len(hands[i]) == 7:
+            score[i] = score[i] + 15
+        hands[i] = []
         print(players[i], "got", score[i], "points this round.")
         total_score[i] = total_score[i] + score[i]
     print("")
@@ -85,7 +89,7 @@ def count_score():
 
 end_turn = 0
 
-def turn():
+def turn(i):
     global end_turn # makes it so you can use the variable in the function
     print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
     print("This is your current hand:", hands[i]+special_hands[i])
@@ -127,69 +131,93 @@ def turn():
 
 frice = "" #frozen/flip sacrifice
 frices = [] # list of sacrifices
-def freeze(player): #it freezes the wroong person when you do it twice
+def freeze(player): 
     global frice
     global frices
     global end_turn
     frices = []
-    if special_hands[player] and special_hands[player][-1] == "Freeze":
+    if end_turn != int(number_of_players) and "Freeze" in special_hands[player]:
         print(players[player], "who would you like to freeze?")
+
         for i in range(0, int(number_of_players)):
             if hands[i] and hands[i][-1] == 'DONE':
                 continue
             else:
-                frices.append(players[i])
+                frices.append(i)
+
         for i in range(0, len(frices)):
-            print((i+1), ".", frices[i])
-        print("enter a NUMBER from the list above.")
-        frice = int(input())
-        while frice is str:
+            print((i+1), ".", players[frices[i]])
+
+        print("Enter a NUMBER from the list above.")
+        frice = input()
+
+        while frice.isdecimal() == False:
             print("Sorry, I didn't understand.")
             print("enter a NUMBER from the list above.")
             frice = input()
-        while int(frice) > len(frices):
+
+        while int(frice) > len(frices) or int(frice) < 1:
             print("Sorry, I didn't understand.")
             print("enter a NUMBER from the list above.")
             frice = input()
-        hands[frice-1] = hands[frice-1] + ["DONE"]
+
+        frice = int(frice)
+        target = frices[frice-1]
+
+        hands[target] = hands[target] + ["DONE"]
         end_turn = end_turn + 1
-        print(players[frice-1], "you are frozen. haha.")
+        print(players[target], "you are frozen. haha.")
         special_hands[player].remove("Freeze")
-    else:
-        return
 
 def flip3(player):
     global frices
     global frice
     global end_turn
-    if special_hands[player] and special_hands[player][-1] == "Flip three":
+    if end_turn != int(number_of_players) and "Flip three" in special_hands[player]:
+        frices = []
         print(players[player], "who would you like to flip?")
+
         for i in range(0, int(number_of_players)):
             if hands[i] and hands[i][-1] == 'DONE':
                 continue
             else:
-                frices.append(players[i])
+                frices.append(i)
+
         for i in range(0, len(frices)):
-            print((i+1), ".", frices[i])
-        print("enter a NUMBER from the list above.")
-        frice = int(input())
-        while frice is str:
+            print(i + 1, ".", players[frices[i]])
+
+        print("Enter a NUMBER from the list above.")
+        frice = input()
+
+        while frice.isdecimal() == False:
             print("Sorry, I didn't understand.")
             print("enter a NUMBER from the list above.")
             frice = input()
-        while int(frice) > len(frices):
+
+        while int(frice) > len(frices) or int(frice) < 1:
             print("Sorry, I didn't understand.")
             print("enter a NUMBER from the list above.")
             frice = input()
-        while players[frice] != frices[frice]:
-            frice = frice - 1
-        add_card(int(frice) - 1)
-        add_card(int(frice) - 1)
-        add_card(int(frice) - 1)
-        print(players[frice - 1], "this is your new hand:", hands[frice-1] + special_hands[frice - 1])
+
+        frice = int(frice)
+        target = frices[frice - 1]
         special_hands[player].remove("Flip three")
 
-def round(): #WHY DOES IT ONLY PLAY ONE PERSON
+        for i in range(0,3):
+            add_card(target)
+            if end_turn == number_of_players:
+                break
+
+        print(players[target], "this is your new hand:", hands[target] + special_hands[target])
+
+        while end_turn != int(number_of_players) and "Freeze" in special_hands[target]:
+            freeze(target)
+
+        while end_turn != int(number_of_players) and "Flip three" in special_hands[target]:
+            freeze(target)
+
+
+def round():
     global end_turn
     while end_turn != number_of_players:
         for i in range(0, int(number_of_players)):
@@ -197,13 +225,10 @@ def round(): #WHY DOES IT ONLY PLAY ONE PERSON
                 print(players[i], "you're a wimp.")
                 print("")
                 continue
-            turn()
+            turn(i)
             freeze(i)
             flip3(i)
-            if len(hands[i]) >= 7 and hands[i][-1] != 'DONE':
-                print(players[i], "got 7 cards. The round is over and you will be rewarded 15 bonus points to your total score.")
-                total_score[i] = total_score[i] + 15
-                end_turn = number_of_players
+            if end_turn == number_of_players:
                 break
     return(count_score())
 
@@ -214,4 +239,4 @@ while total_score[1] < 200:
     for i in range(0, int(number_of_players)):
         special_hands[i] = []
         hands[i] = []
-        score[i] = [0]
+        score[i] = 0
