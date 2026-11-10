@@ -1,0 +1,9 @@
+
+while total_score[1] < 200:
+    print("")
+    round()
+    end_turn = 0
+    for i in range(0, int(number_of_players)):
+        special_hands[i] = []
+        hands[i] = []
+        score[i] = 0
