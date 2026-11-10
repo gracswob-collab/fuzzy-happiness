@@ -26,3 +26,4 @@ for i in range(0, int(number_of_players)):
 special_hands = []
 for i in range(0, int(number_of_players)):
    special_hands.append([])
+
