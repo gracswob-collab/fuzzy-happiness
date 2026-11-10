@@ -131,7 +131,7 @@ def turn(i):
 
 frice = "" #frozen/flip sacrifice
 frices = [] # list of sacrifices
-def freeze(player): 
+def freeze(player):
     global frice
     global frices
     global end_turn
