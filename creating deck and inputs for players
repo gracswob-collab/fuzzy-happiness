@@ -1,0 +1,53 @@
+import random
+def CreateDeck():
+    Deck = [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [
+        10] * 10 + [11] * 11 + [12] * 12
+    Deck += ['Flip Three'] * 3 + ['Second Chance'] * 3 + ['Freeze'] * 3
+    Deck += ["plus_two"] + ["plus_four"] + ["plus_six"] + ["plus_eight"] + ["plus_ten"] + ["double_points"]
+    random.shuffle(Deck)
+    return (Deck)
+
+number_of_players = 0
+score = []
+total_score = []
+hands = []
+players = []
+special_hands = []
+
+def new_game():
+    global number_of_players
+    global Deck
+    global score
+    global hands
+    global special_hands
+    global total_score
+    global players
+    print("How many people are playing?(2-18):")
+    number_of_players = input()
+
+    while number_of_players.isdecimal() == False or int(number_of_players) < 2 or int(number_of_players) > 18:
+       print("How many people are playing? Please enter a NUMBER between 2 and 18 you idiot:")
+       number_of_players = input()
+
+    number_of_players = int(number_of_players)
+    players = []
+    for i in range(0, int(number_of_players)):
+       print("Enter player", (i+1), "'s name:")
+       name = input()
+       players = players + [name]
+
+    score = []
+    for i in range(0, int(number_of_players)):
+       score = score + [0]
+
+    total_score = []
+    for i in range(0, int(number_of_players)):
+       total_score = total_score + [0]
+
+    hands = []
+    for i in range(0, int(number_of_players)):
+       hands.append([])
+
+    special_hands = []
+    for i in range(0, int(number_of_players)):
+       special_hands.append([])
