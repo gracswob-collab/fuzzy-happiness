@@ -1,0 +1,69 @@
+def secondchance(saved):
+    global end_turn
+    print(hands[saved]+special_hands[saved])
+    print("You would've busted if it weren't for your Second Chance. Be more careful.")
+    special_hands[saved].remove("Second Chance")
+    hands[saved].remove(hands[saved][-1])
+
+def add_card(player):
+    global end_turn, Deck
+    if len(Deck) == 0:
+        Deck = CreateDeck()
+        print("The cards have run out. A new deck has been created, with", len(Deck), "cards.")
+    if isinstance(Deck[0],(int)) == True:
+        hands[int(player)].append(Deck[0])
+        del Deck[0]
+        if hands[player].count(hands[player][0]) and hands[player].count(hands[player][-1]) >= 2:
+            if end_turn != int(number_of_players) and "Second Chance" in special_hands[player]:
+                secondchance(player)
+            else:
+                print(players[player], "BUSTED!! You idiot. You got two", hands[player][-1], "'S, and a total hand of:", hands[player], ". Your hand is going to be deleted.")
+                hands[player] = ['DONE']
+                end_turn = end_turn + 1
+                special_hands[player] = []
+
+        if len(hands[int(player)]) >= 7:
+            if hands[int(player)][-1] and hands[int(player)][0] == 'DONE':
+                print("")
+            else:
+                end_turn = number_of_players
+    else:
+        special_hands[int(player)].append(Deck[0])
+        del Deck[0]
+
+def duble_points(player):
+    for i in range(0, len(special_hands[player])):
+        if special_hands[player][i] == "double_points":
+            score[player] = score[player] * 2
+
+def plus_cards(player):
+    for i in special_hands[player]:
+        if i == "plus_two":
+            score[player] = score[player] + 2
+        elif i == "plus_four":
+            score[player] = score[player] + 4
+        elif i == "plus_six":
+            score[player] = score[player] + 6
+        elif i == "plus_eight":
+            score[player] = score[player] + 8
+        elif i == "plus_ten":
+            score[player] = score[player] + 10
+        else:
+            continue
+
+def count_score():
+    print("")
+    for i in range(0, int(number_of_players)):
+        while "DONE" in hands[i]:
+            hands[i].remove("DONE")
+        score[i] = score[i] + sum(hands[i])
+        duble_points(i)
+        plus_cards(i)
+        if len(hands[i]) == 7:
+            score[i] = score[i] + 15
+        hands[i] = []
+        print(players[i], "got", score[i], "points this round.")
+        total_score[i] = total_score[i] + score[i]
+    print("")
+    for i in range(0, int(number_of_players)):
+        print(players[i], "has", total_score[i], "points in total.")
