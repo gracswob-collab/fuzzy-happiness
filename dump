@@ -2,11 +2,10 @@ import random
 def CreateDeck():
     Deck = [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [
         10] * 10 + [11] * 11 + [12] * 12
-    Deck += ['Flip three'] * 3 + ['Second Chance'] * 3 + ['Freeze'] * 3
+    Deck += ['Flip Three'] * 3 + ['Second Chance'] * 3 + ['Freeze'] * 3
     Deck += ["plus_two"] + ["plus_four"] + ["plus_six"] + ["plus_eight"] + ["plus_ten"] + ["double_points"]
     random.shuffle(Deck)
     return (Deck)
-Deck = CreateDeck()
 
 number_of_players = 0
 score = []
@@ -52,23 +51,33 @@ def new_game():
     special_hands = []
     for i in range(0, int(number_of_players)):
        special_hands.append([])
-new_game()
+
+def secondchance(saved):
+    global end_turn
+    print(hands[saved]+special_hands[saved])
+    print("You would've busted if it weren't for your Second Chance. Be more careful.")
+    special_hands[saved].remove("Second Chance")
+    hands[saved].remove(hands[saved][-1])
 
 def add_card(player):
-    global end_turn
+    global end_turn, Deck
     if len(Deck) == 0:
-        CreateDeck()
+        Deck = CreateDeck()
+        print("The cards have run out. A new deck has been created, with", len(Deck), "cards.")
     if isinstance(Deck[0],(int)) == True:
         hands[int(player)].append(Deck[0])
         del Deck[0]
         if hands[player].count(hands[player][0]) and hands[player].count(hands[player][-1]) >= 2:
-            print(players[player], "BUSTED!! You idiot. You got two", hands[player][-1], "'S, and a total hand of:", hands[player], ". Your hand is going to be deleted.")
-            hands[player] = ['DONE']
-            end_turn = end_turn + 1
-            special_hands[player] = []
+            if end_turn != int(number_of_players) and "Second Chance" in special_hands[player]:
+                secondchance(player)
+            else:
+                print(players[player], "BUSTED!! You idiot. You got two", hands[player][-1], "'S, and a total hand of:", hands[player], ". Your hand is going to be deleted.")
+                hands[player] = ['DONE']
+                end_turn = end_turn + 1
+                special_hands[player] = []
 
         if len(hands[int(player)]) >= 7:
-            if hands[int(player)][-1] == 'DONE':
+            if hands[int(player)][-1] and hands[int(player)][0] == 'DONE':
                 print("")
             else:
                 end_turn = number_of_players
@@ -114,7 +123,6 @@ def count_score():
         print(players[i], "has", total_score[i], "points in total.")
 
 end_turn = 0
-
 def turn(i):
     global end_turn # makes it so you can use the variable in the function
     print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
@@ -194,7 +202,7 @@ def flip3(player):
     global frices
     global frice
     global end_turn
-    if end_turn != int(number_of_players) and "Flip three" in special_hands[player]:
+    if end_turn != int(number_of_players) and "Flip Three" in special_hands[player]:
         frices = []
         print(players[player], "who would you like to flip?")
 
@@ -217,22 +225,23 @@ def flip3(player):
 
         frice = int(frice)
         target = frices[frice - 1]
-        special_hands[player].remove("Flip three")
+        special_hands[player].remove("Flip Three")
 
         for i in range(0,3):
             add_card(target)
-            if #make it ebd when tehre is adone antoa dthe end 
             if end_turn == number_of_players:
                 break
+            if hands[target][0] and hands[target][-1] == 'DONE':
+                break
+            if i < 3:
+                print(hands[target]+special_hands[target])
 
         print(players[target], "this is your new hand:", hands[target] + special_hands[target])
-
         while end_turn != int(number_of_players) and "Freeze" in special_hands[target]:
             freeze(target)
 
-        while end_turn != int(number_of_players) and "Flip three" in special_hands[target]:
+        while end_turn != int(number_of_players) and "Flip Three" in special_hands[target]:
             flip3(target)
-
 
 def round():
     global end_turn
@@ -249,11 +258,43 @@ def round():
                 break
     return(count_score())
 
-while total_score[1] < 200:
+winner = ""
+number_of_winners = 0
+def final_winner():
+    global winner, number_of_winners
+    if total_score.count(max(total_score)) == 1:
+        winner = total_score.index(max(total_score))
+        print(players[winner], "won with", total_score[winner], "points. Congrats.")
+    elif total_score.count(max(total_score)) >= 2:
+        print("Those who won are listed below. It was a tie.")
+        number_of_winners = total_score.count(max(total_score))
+        while number_of_winners > 0:
+            for i in range(0, len(number_of_players)):
+                if total_score[i] == max(total_score):
+                    print(players[i], "tied for 1st with", total_score[i], "points.")
+                    number_of_winners = number_of_winners - 1
+
+def game():
+    global end_turn, Deck
+    Deck = CreateDeck()
+    new_game()
+    while max(total_score) < 200:
+        print("")
+        round()
+        end_turn = 0
+        for i in range(0, int(number_of_players)):
+            special_hands[i] = []
+            hands[i] = []
+            score[i] = 0
+    final_winner()
     print("")
-    round()
-    end_turn = 0
-    for i in range(0, int(number_of_players)):
-        special_hands[i] = []
-        hands[i] = []
-        score[i] = 0
+
+response = ""
+while response != "loser":
+    game()
+    print("Would you like to play again?")
+    response = input()
+    if response == "loser":
+        print("You may close the tab")
+    else:
+        print("You are playing another game ahahahaha you loser.")
