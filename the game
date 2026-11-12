@@ -1,0 +1,55 @@
+def round():
+    global end_turn
+    while end_turn != number_of_players:
+        for i in range(0, int(number_of_players)):
+            if hands[i] and hands[i][-1] == 'DONE':
+                print(players[i], "you're a wimp.")
+                print("")
+                continue
+            turn(i)
+            freeze(i)
+            flip3(i)
+            if end_turn == number_of_players:
+                break
+    return(count_score())
+
+winner = ""
+number_of_winners = 0
+def final_winner():
+    global winner, number_of_winners
+    if total_score.count(max(total_score)) == 1:
+        winner = total_score.index(max(total_score))
+        print(players[winner], "won with", total_score[winner], "points. Congrats.")
+    elif total_score.count(max(total_score)) >= 2:
+        print("Those who won are listed below. It was a tie.")
+        number_of_winners = total_score.count(max(total_score))
+        while number_of_winners > 0:
+            for i in range(0, len(number_of_players)):
+                if total_score[i] == max(total_score):
+                    print(players[i], "tied for 1st with", total_score[i], "points.")
+                    number_of_winners = number_of_winners - 1
+
+def game():
+    global end_turn, Deck
+    Deck = CreateDeck()
+    new_game()
+    while max(total_score) < 200:
+        print("")
+        round()
+        end_turn = 0
+        for i in range(0, int(number_of_players)):
+            special_hands[i] = []
+            hands[i] = []
+            score[i] = 0
+    final_winner()
+    print("")
+
+response = ""
+while response != "loser":
+    game()
+    print("Would you like to play again?")
+    response = input()
+    if response == "loser":
+        print("You may close the tab")
+    else:
+        print("You are playing another game ahahahaha you loser.")
