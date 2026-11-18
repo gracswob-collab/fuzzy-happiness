@@ -456,12 +456,17 @@ def swap(player):
             special_hands[target].append(card_two)
             special_hands[target_two].remove(card_two)
 
+        print("These are your new hands:")
+        print(players[target], "this is your hand:", hands[target] + special_hands[target])
+        print(players[target_two], "this is your hand:", hands[target_two] + special_hands[target_two])
+
 def steal(player):
     global frices
     global frice
     global end_turn
     if end_turn != int(number_of_players) and "Steal" in special_hands[player]:
         frices = []
+        special_hands[player].remove("Steal")
         print(players[player], "who would you like to steal from?")
 
         for i in range(0, int(number_of_players)):
@@ -483,7 +488,24 @@ def steal(player):
 
         frice = int(frice)
         target = frices[frice - 1]
-        special_hands[player].remove("Steal")
+
+        print("What card would you like to take from", players[target], "and give to yourself?")
+        card_one = input()
+        while card_one in hands[target] == False:
+            print(
+                "You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
+            card_one = input()
+
+        if instance(card_one,(int)) == True:
+            hands[player].append(card_one)
+            hands[target].remove(card_one)
+        else:
+            special_hands[player].append(card_one)
+            special_hands[target].remove(card_one)
+
+        print("These are your new hands:")
+        print(players[player], "this is your hand:", hands[player]+special_hands[player])
+        print(players[target], "this is your hand:", hands[target]+special_hands[target])
 
 def discard(player):
     global frices
@@ -491,6 +513,7 @@ def discard(player):
     global end_turn
     if end_turn != int(number_of_players) and "Discard" in special_hands[player]:
         frices = []
+        special_hands[player].remove("Discard")
         print(players[player], "what player do you think should discard a card?")
 
         for i in range(0, int(number_of_players)):
@@ -512,7 +535,21 @@ def discard(player):
 
         frice = int(frice)
         target = frices[frice - 1]
-        special_hands[player].remove("Discard")
+
+        print("What card do you wanna remove from", players[target], "?")
+        card_one = input()
+        while card_one in hands[target] == False:
+            print(
+                "You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
+            card_one = input()
+
+        if instance(card_one,(int)) == True:
+            hands[target].remove(card_one)
+        else:
+            special_hands[target].remove(card_one)
+
+        print("This is your new hand", players[target], ":", hands[target] + special_hands[target])
+
 
 def round():
     global end_turn
