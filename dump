@@ -7,16 +7,6 @@ def CreateDeck():
     random.shuffle(Deck)
     return (Deck)
 
-def CreateDeckVengence ():
-    global Deck
-    Deck = 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 6 + [8] * 8 + [9] * 9 + [
-        10] * 10 + [11] * 11 + [12] * 12 + [13] * 12
-    Deck += ["The Zero"] + ["Unlucky 7"] + ["Lucky 13"]
-    Deck += ["Just One More!"] * 2 + ["Flip Four"] * 2 + ["Swap"] * 2 + ["Steal"] * 2 + ["Discard"] * 2
-    random.shuffle(Deck)
-    return (Deck)
-
-
 number_of_players = 0
 score = []
 total_score = []
@@ -33,15 +23,8 @@ def new_game():
     global total_score
     global players
 
-    print("Would you like to play Flip 7 or Flip 7 With a Vengeance?")
-    game_type = input()
-    while game_type != "Flip 7" and game_type != "Flip 7 With a Vengeance?":
-        print("Would you like to play Flip 7 or Flip 7 With a Vengeance? You typed it in wrong last time you idiot.")
-        game_type = input()
-
     print("How many people are playing?(3-18):")
     number_of_players = input()
-
     while number_of_players.isdecimal() == False or int(number_of_players) < 3 or int(number_of_players) > 18:
        print("How many people are playing? Please enter a NUMBER between 2 and 18 you idiot:")
        number_of_players = input()
