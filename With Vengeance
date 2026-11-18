@@ -48,7 +48,7 @@ def new_game():
     number_of_players = input()
 
     while number_of_players.isdecimal() == False or int(number_of_players) < 3 or int(number_of_players) > 18:
-       print("How many people are playing? Please enter a NUMBER between 2 and 18 you idiot:")
+       print("How many people are playing? Please enter a NUMBER between 3 and 18 you idiot:")
        number_of_players = input()
 
     number_of_players = int(number_of_players)
@@ -239,7 +239,7 @@ def freeze(player):
                 frices.append(i)
 
         for i in range(0, len(frices)):
-            print((i+1), ".", players[frices[i]])
+            print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
 
         print("Enter a NUMBER from the list above.")
         frice = input()
@@ -272,7 +272,7 @@ def flip3(player):
                 frices.append(i)
 
         for i in range(0, len(frices)):
-            print(i + 1, ".", players[frices[i]])
+            print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
 
         print("Enter a NUMBER from the list above.")
         frice = input()
@@ -317,7 +317,7 @@ def just_one_more(player):
                 frices.append(i)
 
         for i in range(0, len(frices)):
-            print(i + 1, ".", players[frices[i]])
+            print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
 
         print("Enter a NUMBER from the list above.")
         frice = input()
@@ -349,7 +349,7 @@ def flip4(player):
                 frices.append(i)
 
         for i in range(0, len(frices)):
-            print(i + 1, ".", players[frices[i]])
+            print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
 
         print("Enter a NUMBER from the list above.")
         frice = input()
@@ -397,6 +397,7 @@ def swap(player):
     global frice_two
     if end_turn != int(number_of_players) and "Swap" in special_hands[player]:
         frices = []
+        special_hands[player].remove("Swap")
         print(players[player], "what two cards would you like to swap with 2 different players (including yourself)?")
 
         for i in range(0, int(number_of_players)):
@@ -426,30 +427,35 @@ def swap(player):
 
         frice = int(frice)
         frice_two = int(frice_two)
-        target = frices[frice - 1]
-        target_two = frices[frice_two - 1]
-        special_hands[player].remove("Swap")
+        target = frices[frice - 1] #gets card_two
+        target_two = frices[frice_two - 1] #gets card_one
 
         print("What card would you like to take from", players[target], "and give to", players[target_two], "?")
         card_one = input()
-        while card_one in hands[target_two] == False:
+        while card_one not in hands[target] and card_one not in special_hands[target]:
             print("You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
             card_one = input()
 
         print("What card would you like to take from", players[target_two], "and give to", players[target], "?")
         card_two = input()
-        while card_two in hands[target] == False:
+        while card_two not in hands[target_two] and card_two not in special_hands[target_two]:
             print("You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
             card_two = input()
 
-        if isinstance(card_two,(int)) == True:
+        if card_one.isdecimal():
+            card_one = int(card_one)
+
+        if card_two.isdecimal():
+            card_two = int(card_two)
+
+        if isinstance(card_one,int):
             hands[target_two].append(card_one)
             hands[target].remove(card_one)
         else:
             special_hands[target_two].append(card_one)
             special_hands[target].remove(card_one)
 
-        if instance(card_one,(int)) == True:
+        if isinstance(card_two,int):
             hands[target].append(card_two)
             hands[target_two].remove(card_two)
         else:
@@ -458,7 +464,7 @@ def swap(player):
 
         print("These are your new hands:")
         print(players[target], "this is your hand:", hands[target] + special_hands[target])
-        print(players[target_two], "this is your hand:", hands[target_two] + special_hands[target_two])
+        print(players[target_two], "this is your hand:", hands[target_two] + special_hands[target_two]) #MAKE IT SO THEY BUST IF THEY GET A DUPLICATE CARD
 
 def steal(player):
     global frices
@@ -471,6 +477,10 @@ def steal(player):
 
         for i in range(0, int(number_of_players)):
             if hands[i] and hands[i][-1] == 'DONE':
+                continue
+            elif len(special_hands[i]) + len(hands[i]) == 0:
+                continue
+            elif i == player:
                 continue
             else:
                 frices.append(i)
@@ -496,7 +506,10 @@ def steal(player):
                 "You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
             card_one = input()
 
-        if instance(card_one,(int)) == True:
+        if card_one.isdecimal():
+            card_one = int(card_one)
+
+        if isinstance(card_one,int):
             hands[player].append(card_one)
             hands[target].remove(card_one)
         else:
@@ -543,7 +556,10 @@ def discard(player):
                 "You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
             card_one = input()
 
-        if instance(card_one,(int)) == True:
+        if card_one.isdecimal():
+            card_one = int(card_one)
+
+        if isinstance(card_one,int):
             hands[target].remove(card_one)
         else:
             special_hands[target].remove(card_one)
