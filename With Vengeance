@@ -188,6 +188,9 @@ def turn(i):
     print("This is your current hand:", hands[i]+special_hands[i])
     print("")
     response = input()
+    if "The Zero" in special_hands[i]:
+        print("Haha you have the Zero so you hafta pick up, regardless of what you want. Hahahhahah.")
+        response = "YES"
     if response == "YES":
         add_card(i)
         print("This is your new hand:")
@@ -302,6 +305,17 @@ def flip3(player):
         while end_turn != int(number_of_players) and "Flip Three" in special_hands[target]:
             flip3(target)
 
+def unlucky_seven(player):
+    if end_turn != int(number_of_players) and "Unlucky 7" in special_hands[player]:
+        print("You're very unlucky and you got the unlucky 7. haha. All your cards will be discarded.")
+        hands[player] = []
+        special_hands[player] = ["Unlucky 7"]
+        print(players[player], ", this is your new hand ahahahahhahahahahhahaahahah look at how sad it is:", hands[player] + special_hands[player])
+
+def zero(player):
+    if end_turn != int(number_of_players) and "The Zero" in special_hands[player]:
+        print(players[player], ", you got The Zero. Your total score will equal zero unless you get 7 cards. If you manage to do so, all your cards wil count towards your score. You must pick up every round.")
+
 def just_one_more(player):
     global end_turn
     global frices
@@ -309,8 +323,7 @@ def just_one_more(player):
     if end_turn != int(number_of_players) and "Just One More!" in special_hands[player]:
         frices = []
         special_hands[player].remove("Just One More!")
-        print(players[player], "who would you like to give another card to?")
-
+        print(players[player], "who would you like to give another card to? This will be their last card.")
         for i in range(0, int(number_of_players)):
             if hands[i] and hands[i][-1] == 'DONE':
                 continue
@@ -332,7 +345,26 @@ def just_one_more(player):
         target = frices[frice - 1]
 
         add_card(target)
-        print("This is your new hand:", hands[target] + special_hands[target])
+
+        while end_turn != int(number_of_players) and "Just One More!" in special_hands[target]:
+            just_one_more(target)
+
+        while end_turn != int(number_of_players) and "Flip Four" in special_hands[target]:
+            flip4(target)
+
+        while end_turn != int(number_of_players) and "Swap" in special_hands[target]:
+            swap(target)
+
+        while end_turn != int(number_of_players) and "Steal" in special_hands[target]:
+            steal(target)
+
+        while end_turn != int(number_of_players) and "Discard" in special_hands[target]:
+            discard(target)
+
+        print("This is your new and final hand:", hands[target] + special_hands[target])
+        hands[target] = hands[target] + ['DONE']
+        end_turn = end_turn + 1
+
 
 def flip4(player):
     global frices
@@ -406,8 +438,8 @@ def swap(player):
             else:
                 frices.append(i)
 
-        if len(frices) < 2:
-            return("There is no one to swap from. This card will be discarded.")
+        if len(frices) == 0:
+            return(print("There is no one to swap a card with. This card will be discarded."))
 
         for i in range(0, len(frices)):
             print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
@@ -505,7 +537,7 @@ def steal(player):
                 frices.append(i)
 
         if len(frices) == 0:
-            return("There is no one to steal from. This card will be discarded.")
+            return(print("There is no one to steal from. This card will be discarded."))
 
         for i in range(0, len(frices)):
             print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
@@ -523,13 +555,14 @@ def steal(player):
 
         print("What card would you like to take from", players[target], "and give to yourself?")
         card_one = input()
-        while card_one in hands[target] == False:
+        if card_one.isdecimal():
+            card_one = int(card_one)
+        while card_one not in hands[target] and card_one not in special_hands[target]:
             print(
                 "You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
             card_one = input()
-
-        if card_one.isdecimal():
-            card_one = int(card_one)
+            if card_one.isdecimal():
+                card_one = int(card_one)
 
         if isinstance(card_one,int):
             hands[player].append(card_one)
@@ -579,13 +612,14 @@ def discard(player):
 
         print("What card do you wanna remove from", players[target], "?")
         card_one = input()
-        while card_one in hands[target] == False:
-            print(
-                "You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
-            card_one = input()
-
         if card_one.isdecimal():
             card_one = int(card_one)
+
+        while card_one not in hands[target] and card_one not in special_hands[target]:
+            print("You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
+            card_one = input()
+            if card_one.isdecimal():
+                card_one = int(card_one)
 
         if isinstance(card_one,int):
             hands[target].remove(card_one)
@@ -619,6 +653,7 @@ def vengeance_round():
                 print("")
                 continue
             turn(i)
+            unlucky_seven(i)
             just_one_more(i)
             flip4(i)
             swap(i)
