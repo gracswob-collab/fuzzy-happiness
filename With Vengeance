@@ -308,6 +308,7 @@ def just_one_more(player):
     global frice
     if end_turn != int(number_of_players) and "Just One More!" in special_hands[player]:
         frices = []
+        special_hands[player].remove("Just One More!")
         print(players[player], "who would you like to give another card to?")
 
         for i in range(0, int(number_of_players)):
@@ -329,7 +330,6 @@ def just_one_more(player):
 
         frice = int(frice)
         target = frices[frice - 1]
-        special_hands[player].remove("Just One More!")
 
         add_card(target)
         print("This is your new hand:", hands[target] + special_hands[target])
@@ -340,6 +340,7 @@ def flip4(player):
     global end_turn
     if end_turn != int(number_of_players) and "Flip Four" in special_hands[player]:
         frices = []
+        special_hands[player].remove("Flip Four")
         print(players[player], "who would you like to flip?")
 
         for i in range(0, int(number_of_players)):
@@ -361,7 +362,6 @@ def flip4(player):
 
         frice = int(frice)
         target = frices[frice - 1]
-        special_hands[player].remove("Flip Four")
 
         for i in range(0,4):
             add_card(target)
@@ -406,6 +406,9 @@ def swap(player):
             else:
                 frices.append(i)
 
+        if len(frices) < 2:
+            return("There is no one to swap from. This card will be discarded.")
+
         for i in range(0, len(frices)):
             print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
 
@@ -432,21 +435,25 @@ def swap(player):
 
         print("What card would you like to take from", players[target], "and give to", players[target_two], "?")
         card_one = input()
-        while card_one not in hands[target] and card_one not in special_hands[target]:
-            print("You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
-            card_one = input()
-
-        print("What card would you like to take from", players[target_two], "and give to", players[target], "?")
-        card_two = input()
-        while card_two not in hands[target_two] and card_two not in special_hands[target_two]:
-            print("You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
-            card_two = input()
-
         if card_one.isdecimal():
             card_one = int(card_one)
 
+        while card_one not in hands[target] and card_one not in special_hands[target]:
+            print("You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
+            card_one = input()
+            if card_one.isdecimal():
+                card_one = int(card_one)
+
+        print("What card would you like to take from", players[target_two], "and give to", players[target], "?")
+        card_two = input()
         if card_two.isdecimal():
             card_two = int(card_two)
+
+        while card_two not in hands[target_two] and card_two not in special_hands[target_two]:
+            print("You're an idiot. They either don't have that card or you spelt it wrong or missed capital letter or something. Try again dingot.")
+            card_two = input()
+            if card_two.isdecimal():
+                card_two = int(card_two)
 
         if isinstance(card_one,int):
             hands[target_two].append(card_one)
@@ -466,6 +473,18 @@ def swap(player):
         print(players[target], "this is your hand:", hands[target] + special_hands[target])
         print(players[target_two], "this is your hand:", hands[target_two] + special_hands[target_two]) #MAKE IT SO THEY BUST IF THEY GET A DUPLICATE CARD
 
+        if hands[target].count(card_two) > 1:
+            print(players[target], "BUSTED!! You idiot. You had a total hand of:", hands[target] + special_hands[target],". Your hand is going to be deleted.")
+            hands[target] = ['DONE']
+            end_turn = end_turn + 1
+            special_hands[target] = []
+
+        if hands[target_two].count(card_one) > 1:
+            print(players[target_two], "BUSTED!! You idiot. You had a total hand of:", hands[target_two] + special_hands[target_two],". Your hand is going to be deleted.")
+            hands[target_two] = ['DONE']
+            end_turn = end_turn + 1
+            special_hands[target_two] = []
+
 def steal(player):
     global frices
     global frice
@@ -484,6 +503,9 @@ def steal(player):
                 continue
             else:
                 frices.append(i)
+
+        if len(frices) == 0:
+            return("There is no one to steal from. This card will be discarded.")
 
         for i in range(0, len(frices)):
             print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
@@ -519,6 +541,12 @@ def steal(player):
         print("These are your new hands:")
         print(players[player], "this is your hand:", hands[player]+special_hands[player])
         print(players[target], "this is your hand:", hands[target]+special_hands[target])
+
+        if hands[player].count(card_one) > 1:
+            print(players[player], "BUSTED!! You idiot. You had a total hand of:", hands[player] + special_hands[player],". Your hand is going to be deleted.")
+            hands[player] = ['DONE']
+            end_turn = end_turn + 1
+            special_hands[player] = []
 
 def discard(player):
     global frices
