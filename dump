@@ -273,6 +273,7 @@ def flip3(player):
     global end_turn
     if end_turn != int(number_of_players) and "Flip Three" in special_hands[player]:
         frices = []
+        special_hands[player].remove("Flip Three")
         print(players[player], "who would you like to flip?")
 
         for i in range(0, int(number_of_players)):
@@ -294,7 +295,6 @@ def flip3(player):
 
         frice = int(frice)
         target = frices[frice - 1]
-        special_hands[player].remove("Flip Three")
 
         for i in range(0,3):
             add_card(target)
