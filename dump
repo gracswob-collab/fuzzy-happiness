@@ -1,5 +1,20 @@
 import random
 Deck = []
+number_of_players = 0
+score = []
+total_score = []
+hands = []
+players = []
+special_hands = []
+game_type = ""
+end_turn = 0
+frice = "" #a person who can be selected in wild cards
+frices = [] #a list of anyone who can be selected in wild cards
+frice_two = 0 #used in Flip 7 With a Vengeance
+winner = ""
+number_of_winners = 0
+response = "" # the players response to if they want to play the game or not
+
 def CreateDeck():
     Deck = [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [
         10] * 10 + [11] * 11 + [12] * 12
@@ -17,14 +32,6 @@ def CreateDeckVengeance ():
     Deck += ["minus_two"] + ["minus_four"] + ["minus_six"] + ["minus_eight"] + ["minus_ten"] + ["divide"]
     random.shuffle(Deck)
     return Deck
-
-number_of_players = 0
-score = []
-total_score = []
-hands = []
-players = []
-special_hands = []
-game_type = ""
 
 def determine_game():
     global number_of_players
@@ -183,7 +190,6 @@ def count_score():
     for i in range(0, int(number_of_players)):
         print(players[i], "has", total_score[i], "points in total.")
 
-end_turn = 0
 def turn(i):
     global response
     global end_turn # makes it so you can use the variable in the function
@@ -228,8 +234,6 @@ def turn(i):
                 end_turn = end_turn + 1
                 break
 
-frice = "" #frozen/flip sacrifice
-frices = [] # list of sacrifices
 def freeze(player):
     global frice
     global frices
@@ -424,7 +428,6 @@ def flip4(player):
         while end_turn != int(number_of_players) and "Discard" in special_hands[target]:
             discard(target)
 
-frice_two = 0
 def swap(player):
     global frices
     global frice
@@ -666,8 +669,6 @@ def vengeance_round():
                 break
     return count_score_vengeance()
 
-winner = ""
-number_of_winners = 0
 def final_winner():
     global winner, number_of_winners
     if total_score.count(max(total_score)) == 1:
@@ -712,7 +713,6 @@ def vengeance_game():
     final_winner()
     print("")
 
-response = ""
 while response != "loser":
     determine_game()
     if game_type == "Flip 7":
