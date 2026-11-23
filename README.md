@@ -1,1 +1,1 @@
-put some copyright crap here later
+All this code was made by me, myself, and I. I coded the game Flip 7, as well as Flip 7 With a Vengeance. Those two games are owned by The Op Games, and created/designed by Eric Olsen. I didn't not create these games; this code is just a poor representation of how it could work. 
