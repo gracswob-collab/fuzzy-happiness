@@ -1,11 +1,27 @@
 import random
+Deck = []
+number_of_players = 0
+score = []
+total_score = []
+hands = []
+players = []
+special_hands = []
+game_type = ""
+end_turn = 0
+frice = "" #a person who can be selected in wild cards
+frices = [] #a list of anyone who can be selected in wild cards
+frice_two = 0 #used in Flip 7 With a Vengeance
+winner = ""
+number_of_winners = 0
+response = "" # the players response to if they want to play the game or not
+
 def CreateDeck():
     Deck = [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [
         10] * 10 + [11] * 11 + [12] * 12
     Deck += ['Flip Three'] * 3 + ['Second Chance'] * 3 + ['Freeze'] * 3
     Deck += ["plus_two"] + ["plus_four"] + ["plus_six"] + ["plus_eight"] + ["plus_ten"] + ["double_points"]
     random.shuffle(Deck)
-    return (Deck)
+    return Deck
 
 def CreateDeckVengeance ():
     global Deck
@@ -15,14 +31,7 @@ def CreateDeckVengeance ():
     Deck += ["Just One More!"] * 2 + ["Flip Four"] * 2 + ["Swap"] * 2 + ["Steal"] * 2 + ["Discard"] * 2
     Deck += ["minus_two"] + ["minus_four"] + ["minus_six"] + ["minus_eight"] + ["minus_ten"] + ["divide"]
     random.shuffle(Deck)
-    return (Deck)
-
-number_of_players = 0
-score = []
-total_score = []
-hands = []
-players = []
-special_hands = []
+    return Deck
 
 def determine_game():
     global number_of_players
@@ -86,7 +95,7 @@ def add_card(player):
     if len(Deck) == 0:
         Deck = CreateDeck()
         print("The cards have run out. A new deck has been created, with", len(Deck), "cards.")
-    if isinstance(Deck[0],(int)) == True:
+    if isinstance(Deck[0],int) == True:
         hands[int(player)].append(Deck[0])
         del Deck[0]
         if hands[player].count(hands[player][0]) and hands[player].count(hands[player][-1]) >= 2:
@@ -181,8 +190,8 @@ def count_score():
     for i in range(0, int(number_of_players)):
         print(players[i], "has", total_score[i], "points in total.")
 
-end_turn = 0
 def turn(i):
+    global response
     global end_turn # makes it so you can use the variable in the function
     print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
     print("This is your current hand:", hands[i]+special_hands[i])
@@ -225,8 +234,6 @@ def turn(i):
                 end_turn = end_turn + 1
                 break
 
-frice = "" #frozen/flip sacrifice
-frices = [] # list of sacrifices
 def freeze(player):
     global frice
     global frices
@@ -421,7 +428,6 @@ def flip4(player):
         while end_turn != int(number_of_players) and "Discard" in special_hands[target]:
             discard(target)
 
-frice_two = 0
 def swap(player):
     global frices
     global frice
@@ -439,7 +445,7 @@ def swap(player):
                 frices.append(i)
 
         if len(frices) == 0:
-            return(print("There is no one to swap a card with. This card will be discarded."))
+            return print("There is no one to swap a card with. This card will be discarded.")
 
         for i in range(0, len(frices)):
             print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
@@ -537,7 +543,7 @@ def steal(player):
                 frices.append(i)
 
         if len(frices) == 0:
-            return(print("There is no one to steal from. This card will be discarded."))
+            return print("There is no one to steal from. This card will be discarded.")
 
         for i in range(0, len(frices)):
             print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
@@ -642,7 +648,7 @@ def round():
             flip3(i)
             if end_turn == number_of_players:
                 break
-    return(count_score())
+    return count_score()
 
 def vengeance_round():
     global end_turn
@@ -661,10 +667,8 @@ def vengeance_round():
             discard(i)
             if end_turn == number_of_players:
                 break
-    return(count_score_vengeance())
+    return count_score_vengeance()
 
-winner = ""
-number_of_winners = 0
 def final_winner():
     global winner, number_of_winners
     if total_score.count(max(total_score)) == 1:
@@ -709,7 +713,6 @@ def vengeance_game():
     final_winner()
     print("")
 
-response = ""
 while response != "loser":
     determine_game()
     if game_type == "Flip 7":
