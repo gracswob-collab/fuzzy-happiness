@@ -15,7 +15,9 @@ winner = ""
 number_of_winners = 0
 response = "" # the players response to if they want to play the game or not
 
-def CreateDeck():
+# creates a deck of cards for Flip 7
+def create_deck():
+    global Deck
     Deck = [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [
         10] * 10 + [11] * 11 + [12] * 12
     Deck += ['Flip Three'] * 3 + ['Second Chance'] * 3 + ['Freeze'] * 3
@@ -23,7 +25,8 @@ def CreateDeck():
     random.shuffle(Deck)
     return Deck
 
-def CreateDeckVengeance ():
+# creates a deck of cards for Flip 7 With a Vengeance
+def create_deck_vengeance ():
     global Deck
     Deck = [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 6 + [8] * 8 + [9] * 9 + [
         10] * 10 + [11] * 11 + [12] * 12 + [13] * 12
@@ -33,6 +36,7 @@ def CreateDeckVengeance ():
     random.shuffle(Deck)
     return Deck
 
+# determines what game the team wants to player - Flip 7 or Flip 7 With a Vengeance
 def determine_game():
     global number_of_players
     global score
@@ -45,6 +49,7 @@ def determine_game():
         print("Would you like to play Flip 7 or Flip 7 With a Vengeance? You typed it in wrong last time you idiot.")
         game_type = input()
 
+# sets up a new game, with new players and empty hands 
 def new_game():
     global number_of_players
     global score
@@ -83,24 +88,29 @@ def new_game():
     for i in range(0, int(number_of_players)):
        special_hands.append([])
 
-def secondchance(saved):
+# is used in Flip 7, gives the player another chance if they bust 
+def second_chance(saved):
     global end_turn
     print(hands[saved]+special_hands[saved])
     print("You would've busted if it weren't for your Second Chance. Be more careful.")
     special_hands[saved].remove("Second Chance")
     hands[saved].remove(hands[saved][-1])
 
+# puts a card in a players hand
 def add_card(player):
     global end_turn, Deck
     if len(Deck) == 0:
-        Deck = CreateDeck()
+        if game_type == "Flip 7":
+            Deck = create_deck()
+        else:
+            Deck = create_deck_vengeance
         print("The cards have run out. A new deck has been created, with", len(Deck), "cards.")
     if isinstance(Deck[0],int) == True:
         hands[int(player)].append(Deck[0])
         del Deck[0]
         if hands[player].count(hands[player][0]) and hands[player].count(hands[player][-1]) >= 2:
             if end_turn != int(number_of_players) and "Second Chance" in special_hands[player]:
-                secondchance(player)
+                second_chance(player)
             else:
                 print(players[player], "BUSTED!! You idiot. You got two", hands[player][-1], "'S, and a total hand of:", hands[player], ". Your hand is going to be deleted.")
                 hands[player] = ['DONE']
@@ -116,11 +126,13 @@ def add_card(player):
         special_hands[int(player)].append(Deck[0])
         del Deck[0]
 
+# when totalling the players score, it doubles their score if they have the card
 def duble_points(player):
     for i in range(0, len(special_hands[player])):
         if special_hands[player][i] == "double_points":
             score[player] = score[player] * 2
 
+# adds points to their score if they have the card
 def plus_cards(player):
     for i in special_hands[player]:
         if i == "plus_two":
@@ -136,6 +148,7 @@ def plus_cards(player):
         else:
             continue
 
+# is used in FLip 7 With a Vengeance, and takes away points from their score if they have the card
 def minus_cards(player):
     for i in special_hands[player]:
         if i == "minus_two":
@@ -151,11 +164,13 @@ def minus_cards(player):
         else:
             continue
 
+# is used in Flip 7 With a Vengeance, and divides their score in half if they have the card
 def divide_points(player):
     for i in range(0, len(special_hands[player])):
         if special_hands[player][i] == "divide":
             score[player] = int(score[player] / 2)
 
+# counts the total score of every players' hand in Flip 7 With a Vengeance
 def count_score_vengeance():
     print("")
     for i in range(0, int(number_of_players)):
@@ -172,7 +187,8 @@ def count_score_vengeance():
     print("")
     for i in range(0, int(number_of_players)):
         print(players[i], "has", total_score[i], "points in total.")
-
+        
+# counts the total score of every players' hand in Flip 7
 def count_score():
     print("")
     for i in range(0, int(number_of_players)):
@@ -190,10 +206,11 @@ def count_score():
     for i in range(0, int(number_of_players)):
         print(players[i], "has", total_score[i], "points in total.")
 
+# runs a players "turn"; asks them if they want a card or not
 def turn(i):
     global response
     global end_turn # makes it so you can use the variable in the function
-    print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
+    print("Would you like to pick up a card,", players[i], "?", "YES or NO?")
     print("This is your current hand:", hands[i]+special_hands[i])
     print("")
     response = input()
@@ -215,7 +232,7 @@ def turn(i):
     else:
         while response != "YES" and response != "NO":
             print("Sorry, I didn't understand.")
-            print("Would you like to pick up a card,", players[i] + "?", "YES or NO?")
+            print("Would you like to pick up a card,", players[i], "?", "YES or NO?")
             print("This is your current hand:", hands[i]+special_hands[i])
             print("")
             response = input()
@@ -234,6 +251,7 @@ def turn(i):
                 end_turn = end_turn + 1
                 break
 
+# freeze is a wild card in Flip 7; if the player has this card, the function will run 
 def freeze(player):
     global frice
     global frices
@@ -267,12 +285,14 @@ def freeze(player):
         print(players[target], "you are frozen. haha.")
         special_hands[player].remove("Freeze")
 
+# Flip 3 is a wild card in Flip 7, and if the player has the card, the function will run 
 def flip3(player):
     global frices
     global frice
     global end_turn
     if end_turn != int(number_of_players) and "Flip Three" in special_hands[player]:
         frices = []
+        special_hands[player].remove("Flip Three")
         print(players[player], "who would you like to flip?")
 
         for i in range(0, int(number_of_players)):
@@ -294,7 +314,6 @@ def flip3(player):
 
         frice = int(frice)
         target = frices[frice - 1]
-        special_hands[player].remove("Flip Three")
 
         for i in range(0,3):
             add_card(target)
@@ -312,6 +331,7 @@ def flip3(player):
         while end_turn != int(number_of_players) and "Flip Three" in special_hands[target]:
             flip3(target)
 
+# is a wild card in Flip 7 With a Vengeance; deletes the players hand 
 def unlucky_seven(player):
     if end_turn != int(number_of_players) and "Unlucky 7" in special_hands[player]:
         print("You're very unlucky and you got the unlucky 7. haha. All your cards will be discarded.")
@@ -319,10 +339,12 @@ def unlucky_seven(player):
         special_hands[player] = ["Unlucky 7"]
         print(players[player], ", this is your new hand ahahahahhahahahahhahaahahah look at how sad it is:", hands[player] + special_hands[player])
 
+# is a wild card in Flip 7 With a Vengeance; sets their total score to zero unless they get 7 cards
 def zero(player):
     if end_turn != int(number_of_players) and "The Zero" in special_hands[player]:
         print(players[player], ", you got The Zero. Your total score will equal zero unless you get 7 cards. If you manage to do so, all your cards wil count towards your score. You must pick up every round.")
 
+# forces a player to take just one more card, and then exit for the round
 def just_one_more(player):
     global end_turn
     global frices
@@ -352,27 +374,13 @@ def just_one_more(player):
         target = frices[frice - 1]
 
         add_card(target)
-
-        while end_turn != int(number_of_players) and "Just One More!" in special_hands[target]:
-            just_one_more(target)
-
-        while end_turn != int(number_of_players) and "Flip Four" in special_hands[target]:
-            flip4(target)
-
-        while end_turn != int(number_of_players) and "Swap" in special_hands[target]:
-            swap(target)
-
-        while end_turn != int(number_of_players) and "Steal" in special_hands[target]:
-            steal(target)
-
-        while end_turn != int(number_of_players) and "Discard" in special_hands[target]:
-            discard(target)
+        check_vengeance_cards(target) # checks whether the target got a wild card, and if they have one it will call that function
 
         print("This is your new and final hand:", hands[target] + special_hands[target])
         hands[target] = hands[target] + ['DONE']
         end_turn = end_turn + 1
 
-
+# is used in Flip 7 With a Vengeance, and adds 4 cards to a players hand 
 def flip4(player):
     global frices
     global frice
@@ -413,21 +421,9 @@ def flip4(player):
 
         print(players[target], "this is your new hand:", hands[target] + special_hands[target])
 
-        while end_turn != int(number_of_players) and "Just One More!" in special_hands[target]:
-            just_one_more(target)
+        check_vengeance_cards(target) # checks whether the target got a wild card, and if they have one it will call that function
 
-        while end_turn != int(number_of_players) and "Flip Four" in special_hands[target]:
-            flip4(target)
-
-        while end_turn != int(number_of_players) and "Swap" in special_hands[target]:
-            swap(target)
-
-        while end_turn != int(number_of_players) and "Steal" in special_hands[target]:
-            steal(target)
-
-        while end_turn != int(number_of_players) and "Discard" in special_hands[target]:
-            discard(target)
-
+# is used in Flip 7 With a Vengeance, and allows players to swap cards in their hands 
 def swap(player):
     global frices
     global frice
@@ -523,6 +519,7 @@ def swap(player):
             end_turn = end_turn + 1
             special_hands[target_two] = []
 
+# used in Flip 7 With a Vengeance; allows a player to steal a card from someone else 
 def steal(player):
     global frices
     global frice
@@ -587,6 +584,7 @@ def steal(player):
             end_turn = end_turn + 1
             special_hands[player] = []
 
+# used in Flip 7 With a Vengeance; allows the holder of the card to discard a card from their hand or someone elses hand 
 def discard(player):
     global frices
     global frice
@@ -634,7 +632,24 @@ def discard(player):
 
         print("This is your new hand", players[target], ":", hands[target] + special_hands[target])
 
+# this function is called in other functions, and checks if the card added is any of the following
+def check_vengeance_cards(player):
+    while end_turn != int(number_of_players) and "Just One More!" in special_hands[player]:
+        just_one_more(player)
 
+    while end_turn != int(number_of_players) and "Flip Four" in special_hands[player]:
+        flip4(player)
+
+    while end_turn != int(number_of_players) and "Swap" in special_hands[player]:
+        swap(player)
+
+    while end_turn != int(number_of_players) and "Steal" in special_hands[player]:
+        steal(player)
+
+    while end_turn != int(number_of_players) and "Discard" in special_hands[player]:
+        discard(player)
+
+# calls one round of Flip 7, until everyone busts, and counts the score at the end 
 def round():
     global end_turn
     while end_turn != number_of_players:
@@ -650,6 +665,7 @@ def round():
                 break
     return count_score()
 
+# calls one round of Flip 7 With a Vengeance, until everyone busts, and counts the score at the end 
 def vengeance_round():
     global end_turn
     while end_turn != number_of_players:
@@ -669,6 +685,7 @@ def vengeance_round():
                 break
     return count_score_vengeance()
 
+# figures out who won, or if there was a tie, and prints the final winner
 def final_winner():
     global winner, number_of_winners
     if total_score.count(max(total_score)) == 1:
@@ -683,9 +700,10 @@ def final_winner():
                     print(players[i], "tied for 1st with", total_score[i], "points.")
                     number_of_winners = number_of_winners - 1
 
+# runs a normal game of Flip 7
 def normal_game():
     global end_turn, Deck
-    Deck = CreateDeck()
+    Deck = create_deck()
     new_game()
     while max(total_score) < 200:
         print("")
@@ -698,9 +716,10 @@ def normal_game():
     final_winner()
     print("")
 
+# runs a game of Flip 7 With a Vengeance
 def vengeance_game():
     global end_turn, Deck
-    Deck = CreateDeckVengeance()
+    Deck = create_deck_vengeance()
     new_game()
     while max(total_score) < 200:
         print("")
@@ -713,6 +732,7 @@ def vengeance_game():
     final_winner()
     print("")
 
+# runs a while loop and keeps the players in the game until they give the response "loser" when asking if they want to play another game
 while response != "loser":
     determine_game()
     if game_type == "Flip 7":
