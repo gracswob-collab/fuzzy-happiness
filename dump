@@ -49,7 +49,7 @@ def determine_game():
         print("Would you like to play Flip 7 or Flip 7 With a Vengeance? You typed it in wrong last time you idiot.")
         game_type = input()
 
-# sets up a new game, with new players and empty hands 
+# sets up a new game, with new players and empty hands
 def new_game():
     global number_of_players
     global score
@@ -88,7 +88,7 @@ def new_game():
     for i in range(0, int(number_of_players)):
        special_hands.append([])
 
-# is used in Flip 7, gives the player another chance if they bust 
+# is used in Flip 7, gives the player another chance if they bust
 def second_chance(saved):
     global end_turn
     print(hands[saved]+special_hands[saved])
@@ -187,7 +187,7 @@ def count_score_vengeance():
     print("")
     for i in range(0, int(number_of_players)):
         print(players[i], "has", total_score[i], "points in total.")
-        
+
 # counts the total score of every players' hand in Flip 7
 def count_score():
     print("")
@@ -251,7 +251,7 @@ def turn(i):
                 end_turn = end_turn + 1
                 break
 
-# freeze is a wild card in Flip 7; if the player has this card, the function will run 
+# freeze is a wild card in Flip 7; if the player has this card, the function will run
 def freeze(player):
     global frice
     global frices
@@ -259,6 +259,7 @@ def freeze(player):
     frices = []
     if end_turn != int(number_of_players) and "Freeze" in special_hands[player]:
         print(players[player], "who would you like to freeze?")
+        special_hands[player].remove("Freeze")
 
         for i in range(0, int(number_of_players)):
             if hands[i] and hands[i][-1] == 'DONE':
@@ -283,9 +284,8 @@ def freeze(player):
         hands[target] = hands[target] + ["DONE"]
         end_turn = end_turn + 1
         print(players[target], "you are frozen. haha.")
-        special_hands[player].remove("Freeze")
 
-# Flip 3 is a wild card in Flip 7, and if the player has the card, the function will run 
+# Flip 3 is a wild card in Flip 7, and if the player has the card, the function will run
 def flip3(player):
     global frices
     global frice
@@ -331,7 +331,7 @@ def flip3(player):
         while end_turn != int(number_of_players) and "Flip Three" in special_hands[target]:
             flip3(target)
 
-# is a wild card in Flip 7 With a Vengeance; deletes the players hand 
+# is a wild card in Flip 7 With a Vengeance; deletes the players hand
 def unlucky_seven(player):
     if end_turn != int(number_of_players) and "Unlucky 7" in special_hands[player]:
         print("You're very unlucky and you got the unlucky 7. haha. All your cards will be discarded.")
@@ -380,7 +380,7 @@ def just_one_more(player):
         hands[target] = hands[target] + ['DONE']
         end_turn = end_turn + 1
 
-# is used in Flip 7 With a Vengeance, and adds 4 cards to a players hand 
+# is used in Flip 7 With a Vengeance, and adds 4 cards to a players hand
 def flip4(player):
     global frices
     global frice
@@ -423,7 +423,7 @@ def flip4(player):
 
         check_vengeance_cards(target) # checks whether the target got a wild card, and if they have one it will call that function
 
-# is used in Flip 7 With a Vengeance, and allows players to swap cards in their hands 
+# is used in Flip 7 With a Vengeance, and allows players to swap cards in their hands
 def swap(player):
     global frices
     global frice
@@ -519,7 +519,7 @@ def swap(player):
             end_turn = end_turn + 1
             special_hands[target_two] = []
 
-# used in Flip 7 With a Vengeance; allows a player to steal a card from someone else 
+# used in Flip 7 With a Vengeance; allows a player to steal a card from someone else
 def steal(player):
     global frices
     global frice
@@ -584,7 +584,7 @@ def steal(player):
             end_turn = end_turn + 1
             special_hands[player] = []
 
-# used in Flip 7 With a Vengeance; allows the holder of the card to discard a card from their hand or someone elses hand 
+# used in Flip 7 With a Vengeance; allows the holder of the card to discard a card from their hand or someone elses hand
 def discard(player):
     global frices
     global frice
@@ -649,7 +649,7 @@ def check_vengeance_cards(player):
     while end_turn != int(number_of_players) and "Discard" in special_hands[player]:
         discard(player)
 
-# calls one round of Flip 7, until everyone busts, and counts the score at the end 
+# calls one round of Flip 7, until everyone busts, and counts the score at the end
 def round():
     global end_turn
     while end_turn != number_of_players:
@@ -665,7 +665,7 @@ def round():
                 break
     return count_score()
 
-# calls one round of Flip 7 With a Vengeance, until everyone busts, and counts the score at the end 
+# calls one round of Flip 7 With a Vengeance, until everyone busts, and counts the score at the end
 def vengeance_round():
     global end_turn
     while end_turn != number_of_players:
