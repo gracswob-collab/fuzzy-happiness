@@ -13,6 +13,43 @@ frices = [] # a list of anyone who can be selected in wild cards
 winner = ""
 number_of_winners = 0
 response = "" # the players response to if they want to play the game or not
+rules_one = """Objective:
+
+Be the first player to accumulate 200 points or more across multiple rounds.
+Number Cards (0–12): Numbered 1 through 12 (plus a single 0). The quantity of each number card matches its value (e.g., twelve 12s, eleven 11s... down to one.
+Action Cards (3 copies each):
+
+Freeze: Immediately ends an active player's turn as if they chose to stay.
+
+Flip Three: Forces a target player to draw three cards in a row.
+
+Second Chance: Acts as a safety net; if you draw a duplicate number, discard this card and the duplicate to keep playing. 
+
+Score Modifier Cards: Includes plus modifiers (+2 through +10) and a x2 multiplier card. 
+
+
+How a Round Works:
+
+Setup & Initial Deal: Choose a dealer. The dealer deals one face-up card to each player, starting with the player to their left. If an action card is dealt initially, resolve it right away. 
+Turn Options: On your turn, choose to:
+
+Hit: Draw another card face-up. If the number is unique (different from any number card currently in your line/tableau), you keep going.
+Stay: Bank your current cards and safely exit the round. 
+
+Busting: If you draw a second number card that matches a number already in your line, you bust. You are knocked out of the round immediately and score zero points for that round. 
+
+Flip 7 Bonus: If you collect seven unique number cards in your line, the round ends immediately, and you earn a 15-point bonus on top of your card values. 
+
+Round End: A round ends when all active players have either stayed or busted, or someone achieves a Flip 7. 
+
+
+Scoring:
+Add the face value of all your number cards.
+If you have a x2 multiplier, multiply the sum of your number cards only (do not multiply modifier cards or the 15-point Flip 7 bonus).
+Add any plus modifiers (+2 to +10) and the 15-point Flip 7 bonus if applicable.
+Discard used cards and rotate the dealer role clockwise for the next round.
+The game concludes at the end of any round where a player reaches or exceeds 200 points; the player with the highest total wins."""
+
 
 # creates a deck of cards for Flip 7
 def create_deck():
@@ -31,6 +68,17 @@ def new_game():
     global special_hands
     global total_score
     global players
+
+    print("Would you like a copy of the rules and instructions on how to play? YES or NO.")
+    rules_response = input()
+
+    while rules_response != "YES" and rules_response != "NO":
+        print("You typed it in wrong you idiot. Would you like the rules or not? YES or NO?")
+        rules_response = input()
+
+    if rules_response == "YES":
+        print(rules_one)
+        print("")
 
     print("How many people are playing?(3-18):")
     number_of_players = input()
