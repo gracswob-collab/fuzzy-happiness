@@ -14,6 +14,98 @@ frice_two = 0 #used in Flip 7 With a Vengeance
 winner = ""
 number_of_winners = 0
 response = "" # the players response to if they want to play the game or not
+rules_one = """Objective:
+
+Be the first player to accumulate 200 points or more across multiple rounds.
+Number Cards (0–12): Numbered 1 through 12 (plus a single 0). The quantity of each number card matches its value (e.g., twelve 12s, eleven 11s... down to one.
+Action Cards (3 copies each):
+
+Freeze: Immediately ends an active player's turn as if they chose to stay.
+
+Flip Three: Forces a target player to draw three cards in a row.
+
+Second Chance: Acts as a safety net; if you draw a duplicate number, discard this card and the duplicate to keep playing. 
+
+Score Modifier Cards: Includes plus modifiers (+2 through +10) and a x2 multiplier card. 
+
+
+How a Round Works:
+
+Setup & Initial Deal: Choose a dealer. The dealer deals one face-up card to each player, starting with the player to their left. If an action card is dealt initially, resolve it right away. 
+Turn Options: On your turn, choose to:
+
+Hit: Draw another card face-up. If the number is unique (different from any number card currently in your line/tableau), you keep going.
+Stay: Bank your current cards and safely exit the round. 
+
+Busting: If you draw a second number card that matches a number already in your line, you bust. You are knocked out of the round immediately and score zero points for that round. 
+
+Flip 7 Bonus: If you collect seven unique number cards in your line, the round ends immediately, and you earn a 15-point bonus on top of your card values. 
+
+Round End: A round ends when all active players have either stayed or busted, or someone achieves a Flip 7. 
+
+
+Scoring:
+Add the face value of all your number cards.
+If you have a x2 multiplier, multiply the sum of your number cards only (do not multiply modifier cards or the 15-point Flip 7 bonus).
+Add any plus modifiers (+2 to +10) and the 15-point Flip 7 bonus if applicable.
+Discard used cards and rotate the dealer role clockwise for the next round.
+The game concludes at the end of any round where a player reaches or exceeds 200 points; the player with the highest total wins."""
+
+rules_two = """The Goal
+
+Be the first player to reach 200 or more points across multiple rounds. You earn points by flipping cards one at a time—just don’t push your luck too far and draw a duplicate number, or you’ll lose everything for that round!
+
+1. Setup & Starting a Round
+
+• Shuffle & Deal: Shuffle the entire deck well. Choose a starting dealer, who deals 1 card face-up to every player, including themselves.
+• Deal-Phase Actions: If an Action card is dealt during the initial deal, resolve it immediately before moving on to the next player. (If there are no valid targets for an Action card at any point, simply discard it.)
+• Card Layout: Keep your cards organized in front of you so everyone can see your Number cards in one row and your Modifier cards nearby.
+
+2. Playing Your Turn: Hit or Stay
+
+Going clockwise around the table, the dealer asks each active player if they want to Hit or Stay:
+• Hit: Take 1 new card face-up from the deck and add it to your area.
+• Stay: Lock in your current hand by turning your leftmost card sideways.
+	• The Vengeance Twist: Unlike the original Flip 7, staying does NOT make you immune to opponents! You no longer take turns, and you can’t voluntarily draw more cards, but other players can still hit you with Action cards until the round officially ends.
+
+3. Busting vs. Flipping 7
+
+There are two dramatic ways your round can end:
+• Busting: If you ever end up with two cards of the same number (whether by hitting, being forced to draw, or swapping), you immediately Bust. Flip all your cards face-down—you score 0 points for the round and are out until the next round.
+• Flip 7: If you collect 7 unique Number cards, you hit a Flip 7! The round ends immediately for everyone, and you earn a +15 point bonus on top of your normal score.
+
+4. Special Number Cards
+
+The deck contains Number cards from 0 to 13 (with higher numbers appearing more frequently, just like the original). Three numbers have special rules:
+• Zero (0): Having a 0 makes your total round score 0, unless you manage to hit a Flip 7! Because you can't score otherwise, a 0 forces you to keep hitting on every turn until you either get a Flip 7 or bust. (If you happen to get a second 0, you still bust like normal.)
+• Unlucky 7: When you get this card, you must discard every other Number and Modifier card in front of you, leaving only the Unlucky 7. It does not make you bust, and it counts as 1 of your 7 numbers toward a Flip 7.
+• Lucky 13: Normally, drawing a duplicate number busts you. However, the Lucky 13 is safe—you can hold two 13s without busting! (A third 13 will still bust you, and if you get a Flip 7, both 13s count toward your 7 cards.)
+
+5. Modifier Cards
+
+Modifier cards sit beside your numbers and change your final score if you survive the round:
+• Division (÷2): At the end of the round, add up all your Number cards first, divide that total by 2 (rounding down), and then apply any negative modifiers.
+• Negative Modifiers (-2 through -10): Subtract this amount from your round total. Normally, your score cannot drop below 0—unless your group agrees to play Brutal Mode, where negative round scores actually subtract from your overall game score!
+
+6. Action Cards
+
+Whenever an Action card is flipped, it must be resolved immediately. You can target any player still in the round—including yourself, or players who have already chosen to Stay!
+• Just One More: Choose a player; they must immediately draw 1 card from the deck.
+• Flip Four: Choose a player; they must draw 4 cards in a row, resolving them one by one. (If they hit a Flip 7 or bust partway through, they stop drawing immediately.)
+• Swap: Choose two players (one can be yourself) to trade a Number card from their rows. If a traded card gives someone a duplicate number, they bust immediately!
+• Steal: Take 1 Number or Modifier card from another player and add it to your own area. (Yes, stealing a duplicate number will make you bust!)
+• Discard: Choose a player and force them to discard 1 Number or Modifier card of your choice from their area.
+
+7. Scoring & Ending the Game
+
+• End of Round: Once everyone has either stayed or busted (or someone hits a Flip 7), all non-busted players tally their points:
+	1. Add up your Number cards (unless you have a 0 without a Flip 7).
+	2. Divide by 2 if you have a ÷2 Modifier (round down).
+	3. Subtract any Negative Modifiers (stopping at 0 unless playing Brutal Mode).
+	4. Add +15 points if you achieved a Flip 7.
+• Next Round: Clear all cards from the table into a discard pile (shuffle the discard pile into a new deck whenever the draw pile runs out) and pass the dealer role to the left.
+• Winning: At the end of a round, if at least one player has 200 or more points, the player with the highest total wins!"""
+
 
 # creates a deck of cards for Flip 7
 def create_deck():
@@ -48,6 +140,21 @@ def determine_game():
     while game_type != "Flip 7" and game_type != "Flip 7 With a Vengeance":
         print("Would you like to play Flip 7 or Flip 7 With a Vengeance? You typed it in wrong last time you idiot.")
         game_type = input()
+
+    print("Would you like a copy of the rules and instructions on how to play? YES or NO.")
+    rules_response = input()
+
+    while rules_response != "YES" and rules_response != "NO":
+        print("You typed it in wrong you idiot. Would you like the rules or not? YES or NO?")
+        rules_response = input()
+
+    if rules_response == "YES":
+        if game_type == "Flip 7":
+            print(rules_one)
+            print("")
+        else:
+            print(rules_two)
+            print("")
 
 # sets up a new game, with new players and empty hands
 def new_game():
