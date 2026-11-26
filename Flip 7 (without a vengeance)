@@ -1,0 +1,317 @@
+import random
+Deck = []
+number_of_players = 0
+score = []
+total_score = []
+hands = []
+players = []
+special_hands = []
+game_type = ""
+end_turn = 0
+frice = "" # a person who can be selected in wild cards
+frices = [] # a list of anyone who can be selected in wild cards
+winner = ""
+number_of_winners = 0
+response = "" # the players response to if they want to play the game or not
+
+# creates a deck of cards for Flip 7
+def create_deck():
+    global Deck
+    Deck = [0] * 1 + [1] * 1 + [2] * 2 + [3] * 3 + [4] * 4 + [5] * 5 + [6] * 6 + [7] * 7 + [8] * 8 + [9] * 9 + [
+        10] * 10 + [11] * 11 + [12] * 12
+    Deck += ['Flip Three'] * 3 + ['Second Chance'] * 3 + ['Freeze'] * 3
+    Deck += ["plus_two"] + ["plus_four"] + ["plus_six"] + ["plus_eight"] + ["plus_ten"] + ["double_points"]
+    random.shuffle(Deck)
+    return Deck
+
+def new_game():
+    global number_of_players
+    global score
+    global hands
+    global special_hands
+    global total_score
+    global players
+
+    print("How many people are playing?(3-18):")
+    number_of_players = input()
+
+    while number_of_players.isdecimal() == False or int(number_of_players) < 3 or int(number_of_players) > 18:
+       print("How many people are playing? Please enter a NUMBER between 3 and 18 you idiot:")
+       number_of_players = input()
+
+    number_of_players = int(number_of_players)
+    players = []
+    for i in range(0, int(number_of_players)):
+       print("Enter player", (i+1), "'s name:")
+       name = input()
+       players = players + [name]
+
+    score = []
+    for i in range(0, int(number_of_players)):
+       score = score + [0]
+
+    total_score = []
+    for i in range(0, int(number_of_players)):
+       total_score = total_score + [0]
+
+    hands = []
+    for i in range(0, int(number_of_players)):
+       hands.append([])
+
+    special_hands = []
+    for i in range(0, int(number_of_players)):
+       special_hands.append([])
+
+# is used in Flip 7, gives the player another chance if they bust
+def second_chance(saved):
+    global end_turn
+    print(hands[saved]+special_hands[saved])
+    print("You would've busted if it weren't for your Second Chance. Be more careful.")
+    special_hands[saved].remove("Second Chance")
+    hands[saved].remove(hands[saved][-1])
+
+# puts a card in a players hand
+def add_card(player):
+    global end_turn, Deck
+    if len(Deck) == 0:
+          Deck = create_deck()
+          print("The cards have run out. A new deck has been created, with", len(Deck), "cards.")
+    if isinstance(Deck[0],int) == True:
+        hands[int(player)].append(Deck[0])
+        del Deck[0]
+        if hands[player].count(hands[player][0]) and hands[player].count(hands[player][-1]) >= 2:
+            if end_turn != int(number_of_players) and "Second Chance" in special_hands[player]:
+                second_chance(player)
+            else:
+                print(players[player], "BUSTED!! You idiot. You got two", hands[player][-1], "'S, and a total hand of:", hands[player], ". Your hand is going to be deleted.")
+                hands[player] = ['DONE']
+                end_turn = end_turn + 1
+                special_hands[player] = []
+
+        if len(hands[int(player)]) >= 7:
+            if hands[int(player)][-1] and hands[int(player)][0] == 'DONE':
+                print("")
+            else:
+                end_turn = number_of_players
+    else:
+        special_hands[int(player)].append(Deck[0])
+        del Deck[0]
+
+# when totalling the players score, it doubles their score if they have the card
+def duble_points(player):
+    for i in range(0, len(special_hands[player])):
+        if special_hands[player][i] == "double_points":
+            score[player] = score[player] * 2
+
+# adds points to their score if they have the card
+def plus_cards(player):
+    for i in special_hands[player]:
+        if i == "plus_two":
+            score[player] = score[player] + 2
+        elif i == "plus_four":
+            score[player] = score[player] + 4
+        elif i == "plus_six":
+            score[player] = score[player] + 6
+        elif i == "plus_eight":
+            score[player] = score[player] + 8
+        elif i == "plus_ten":
+            score[player] = score[player] + 10
+        else:
+            continue
+
+# counts the total score of every players' hand in Flip 7
+def count_score():
+    print("")
+    for i in range(0, int(number_of_players)):
+        while "DONE" in hands[i]:
+            hands[i].remove("DONE")
+        score[i] = score[i] + sum(hands[i])
+        duble_points(i)
+        plus_cards(i)
+        if len(hands[i]) == 7:
+            score[i] = score[i] + 15
+        hands[i] = []
+        print(players[i], "got", score[i], "points this round.")
+        total_score[i] = total_score[i] + score[i]
+    print("")
+    for i in range(0, int(number_of_players)):
+        print(players[i], "has", total_score[i], "points in total.")
+
+# runs a players "turn"; asks them if they want a card or not
+def turn(i):
+    global response
+    global end_turn # makes it so you can use the variable in the function
+    print("Would you like to pick up a card,", players[i], "?", "YES or NO?")
+    print("This is your current hand:", hands[i]+special_hands[i])
+    print("")
+    response = input()
+    if response == "YES":
+        add_card(i)
+        print("This is your new hand:")
+        print(hands[i] + special_hands[i])
+        print("")
+    elif response == "NO":
+        print("You're a wimp.")
+        print("This is your loser hand:")
+        print(hands[i]+special_hands[i])
+        print("")
+        hands[i] = hands[i] + ["DONE"]
+        end_turn = end_turn + 1
+    else:
+        while response != "YES" and response != "NO":
+            print("Sorry, I didn't understand.")
+            print("Would you like to pick up a card,", players[i], "?", "YES or NO?")
+            print("This is your current hand:", hands[i]+special_hands[i])
+            print("")
+            response = input()
+            if response == "YES":
+                add_card(i)
+                print("This is your new hand:")
+                print(hands[i]+special_hands[i])
+                print("")
+                break
+            if response == "NO":
+                print("You're a wimp.")
+                print("This is your loser hand:")
+                print(hands[i])
+                print("")
+                hands[i] = hands[i] + ["DONE"]
+                end_turn = end_turn + 1
+                break
+
+# freeze is a wild card in Flip 7; if the player has this card, the function will run
+def freeze(player):
+    global frice
+    global frices
+    global end_turn
+    frices = []
+    if end_turn != int(number_of_players) and "Freeze" in special_hands[player]:
+        print(players[player], "who would you like to freeze?")
+        special_hands[player].remove("Freeze")
+
+        for i in range(0, int(number_of_players)):
+            if hands[i] and hands[i][-1] == 'DONE':
+                continue
+            else:
+                frices.append(i)
+
+        for i in range(0, len(frices)):
+            print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
+
+        print("Enter a NUMBER from the list above.")
+        frice = input()
+
+        while frice.isdecimal() == False or int(frice) > len(frices) or int(frice) < 1:
+            print("Sorry, I didn't understand.")
+            print("enter a NUMBER from the list above.")
+            frice = input()
+
+        frice = int(frice)
+        target = frices[frice-1]
+
+        hands[target] = hands[target] + ["DONE"]
+        end_turn = end_turn + 1
+        print(players[target], "you are frozen. haha.")
+
+# Flip 3 is a wild card in Flip 7, and if the player has the card, the function will run
+def flip3(player):
+    global frices
+    global frice
+    global end_turn
+    if end_turn != int(number_of_players) and "Flip Three" in special_hands[player]:
+        frices = []
+        special_hands[player].remove("Flip Three")
+        print(players[player], "who would you like to flip?")
+
+        for i in range(0, int(number_of_players)):
+            if hands[i] and hands[i][-1] == 'DONE':
+                continue
+            else:
+                frices.append(i)
+
+        for i in range(0, len(frices)):
+            print(i + 1, ".", players[frices[i]], "who has the following cards:", hands[frices[i]] + special_hands[frices[i]])
+
+        print("Enter a NUMBER from the list above.")
+        frice = input()
+
+        while frice.isdecimal() == False or int(frice) > len(frices) or int(frice) < 1:
+            print("Sorry, I didn't understand.")
+            print("enter a NUMBER from the list above.")
+            frice = input()
+
+        frice = int(frice)
+        target = frices[frice - 1]
+
+        for i in range(0,3):
+            add_card(target)
+            if end_turn == number_of_players:
+                break
+            if hands[target][0] and hands[target][-1] == 'DONE':
+                break
+            if i < 3:
+                print(hands[target]+special_hands[target])
+
+        print(players[target], "this is your new hand:", hands[target] + special_hands[target])
+        while end_turn != int(number_of_players) and "Freeze" in special_hands[target]:
+            freeze(target)
+
+        while end_turn != int(number_of_players) and "Flip Three" in special_hands[target]:
+            flip3(target)
+
+# calls one round of Flip 7, until everyone busts, and counts the score at the end
+def round():
+    global end_turn
+    while end_turn != number_of_players:
+        for i in range(0, int(number_of_players)):
+            if hands[i] and hands[i][-1] == 'DONE':
+                print(players[i], "you're a wimp.")
+                print("")
+                continue
+            turn(i)
+            freeze(i)
+            flip3(i)
+            if end_turn == number_of_players:
+                break
+    return count_score()
+
+# figures out who won, or if there was a tie, and prints the final winner
+def final_winner():
+    global winner, number_of_winners
+    if total_score.count(max(total_score)) == 1:
+        winner = total_score.index(max(total_score))
+        print(players[winner], "won with", total_score[winner], "points. Congrats.")
+    elif total_score.count(max(total_score)) >= 2:
+        print("Those who won are listed below. It was a tie.")
+        number_of_winners = total_score.count(max(total_score))
+        while number_of_winners > 0:
+            for i in range(0, int(number_of_players)):
+                if total_score[i] == max(total_score):
+                    print(players[i], "tied for 1st with", total_score[i], "points.")
+                    number_of_winners = number_of_winners - 1
+
+# runs a normal game of Flip 7
+def normal_game():
+    global end_turn, Deck
+    Deck = create_deck()
+    new_game()
+    while max(total_score) < 200:
+        print("")
+        round()
+        end_turn = 0
+        for i in range(0, int(number_of_players)):
+            special_hands[i] = []
+            hands[i] = []
+            score[i] = 0
+    final_winner()
+    print("")
+
+# runs a while loop and keeps the players in the game until they give the response "loser" when asking if they want to play another game
+while response != "loser":
+    normal_game()
+    print("Would you like to play again?")
+    response = input()
+    if response == "loser":
+        print("You may close the tab")
+    else:
+        print("You are playing another game ahahahaha you loser.")
